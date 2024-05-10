@@ -47,7 +47,7 @@
     "dotenv": "16.3.1",
     "drizzle-orm": "0.27.2",
     "drizzle-zod": "0.4.4",
-    "next": "13.5.1",
+    "next": "14.1.1",
     "next-auth": "4.24.5",
     "next-themes": "0.2.1",
     "postgres": "3.3.5",
