@@ -1,8 +1,9 @@
 import type { InferModel } from "drizzle-orm";
-import { pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
+import { timestamp, varchar } from "drizzle-orm/pg-core";
+import { authTable } from "./_table";
 import { users } from "./user";
 
-export const sessions = pgTable("sessions", {
+export const sessions = authTable("sessions", {
   sessionToken: varchar("sessionToken", { length: 255 }).notNull().primaryKey(),
   userId: varchar("userId", { length: 255 })
     .notNull()

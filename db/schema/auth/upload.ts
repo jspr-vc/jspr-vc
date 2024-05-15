@@ -1,8 +1,9 @@
-import { InferModel, relations } from "drizzle-orm";
-import { bigint, pgTable, serial, varchar } from "drizzle-orm/pg-core";
+import { type InferModel, relations } from "drizzle-orm";
+import { bigint, serial, varchar } from "drizzle-orm/pg-core";
+import { authTable } from "./_table";
 import { users } from "./user";
 
-export const uploads = pgTable("uploads", {
+export const uploads = authTable("uploads", {
   id: serial("id").primaryKey().notNull(),
   url: varchar("url").notNull(),
   name: varchar("name").notNull(),

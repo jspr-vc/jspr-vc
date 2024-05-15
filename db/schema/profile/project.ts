@@ -1,17 +1,17 @@
-import { portfolios } from "./portfolio";
 import { type InferModel, relations } from "drizzle-orm";
-import { projectTech } from "./project-technologies";
 import {
   date,
   integer,
-  pgTable,
   serial,
   text,
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
+import { profileTable } from "./_table";
+import { portfolios } from "./portfolio";
+import { projectTech } from "./project-technologies";
 
-export const projects = pgTable("projects", {
+export const projects = profileTable("projects", {
   id: serial("id").primaryKey().notNull(),
   name: varchar("name", { length: 255 }).notNull(),
   body: text("body").notNull(),

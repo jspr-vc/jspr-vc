@@ -1,12 +1,11 @@
 import { type InferModel, relations } from "drizzle-orm";
-import { technologies } from "./technologies";
+import { integer, primaryKey, timestamp } from "drizzle-orm/pg-core";
+import { profileTable } from "./_table";
 import { experiences } from "./experience";
-import { integer, pgTable, primaryKey, timestamp } from "drizzle-orm/pg-core";
+import { technologies } from "./technologies";
 
-/**
- * This is a join table for "experience" and "technologies" (Many to Many)
- */
-export const experienceTech = pgTable(
+/** This is a join table for "experience" and "technologies" (Many to Many) */
+export const experienceTech = profileTable(
   "experience_technologies",
   {
     experienceId: integer("experience_id")

@@ -1,8 +1,9 @@
 import type { InferModel } from "drizzle-orm";
-import { pgTable, primaryKey, timestamp, varchar } from "drizzle-orm/pg-core";
+import { primaryKey, timestamp, varchar } from "drizzle-orm/pg-core";
+import { authTable } from "./_table";
 
 // --- Next Auth Table ---
-export const verificationTokens = pgTable(
+export const verificationTokens = authTable(
   "verificationTokens",
   {
     identifier: varchar("identifier", { length: 255 }).notNull(),

@@ -1,10 +1,11 @@
-import type { ProviderType } from "next-auth/providers";
 import type { InferModel } from "drizzle-orm";
-import { integer, pgTable, primaryKey, varchar } from "drizzle-orm/pg-core";
+import { integer, primaryKey, varchar } from "drizzle-orm/pg-core";
+import type { ProviderType } from "next-auth/providers";
+import { authTable } from "./_table";
 import { users } from "./user";
 
 // --- Next Auth Table ---
-export const accounts = pgTable(
+export const accounts = authTable(
   "accounts",
   {
     userId: varchar("userId", { length: 255 })

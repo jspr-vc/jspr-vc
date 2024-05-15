@@ -1,21 +1,22 @@
+import { type InferModel, relations } from "drizzle-orm";
 import {
   integer,
   pgEnum,
-  pgTable,
   serial,
   text,
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
+import { profileTable } from "./_table";
 import { portfolios } from "./portfolio";
-import { InferModel, relations } from "drizzle-orm";
 
 export const postStatus = pgEnum("post_status", [
   "draft",
   "published",
   "archived",
 ]);
-export const posts = pgTable("posts", {
+
+export const posts = profileTable("posts", {
   id: serial("id").primaryKey().notNull(),
   slug: varchar("slug", { length: 255 }).notNull().unique(),
   title: varchar("title", { length: 255 }).notNull(),

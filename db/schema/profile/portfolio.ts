@@ -3,13 +3,14 @@
  * that's why it's detached from user table
  */
 import { type InferModel, relations } from "drizzle-orm";
+import { jsonb, serial, text, varchar } from "drizzle-orm/pg-core";
+import { users } from "../auth/user";
+import { profileTable } from "./_table";
 import { experiences } from "./experience";
-import { users } from "./user";
-import { projects } from "./project";
 import { posts } from "./posts";
-import { jsonb, pgTable, serial, text, varchar } from "drizzle-orm/pg-core";
+import { projects } from "./project";
 
-export const portfolios = pgTable("portfolios", {
+export const portfolios = profileTable("portfolios", {
   id: serial("id").primaryKey().notNull(),
   name: varchar("name", { length: 255 }).notNull(),
   headline: text("headline").notNull(),

@@ -1,20 +1,15 @@
 import { type InferModel, relations } from "drizzle-orm";
-import { portfolios } from "./portfolio";
-import {
-  integer,
-  pgEnum,
-  pgTable,
-  timestamp,
-  varchar,
-} from "drizzle-orm/pg-core";
+import { integer, pgEnum, timestamp, varchar } from "drizzle-orm/pg-core";
+import { portfolios } from "../profile/portfolio";
+import { authTable } from "./_table";
 import { uploads } from "./upload";
 
 // --- Next Auth Table ---
 export const userRole = pgEnum("user_role", ["admin", "default"]);
-export const users = pgTable("users", {
+export const users = authTable("users", {
   id: varchar("id", { length: 255 }).notNull().primaryKey(),
   name: varchar("name", { length: 255 }),
-  email: varchar("email", { length: 255 }).notNull(), // TODO: convert to unique column
+  email: varchar("email", { length: 255 }).notNull().unique(),
   emailVerified: timestamp("email_verified", { mode: "date" }),
   image: varchar("image", { length: 255 }),
   role: userRole("role").default("default").notNull(),

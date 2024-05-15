@@ -1,19 +1,15 @@
-import { InferModel, relations } from "drizzle-orm";
-import { projectTech } from "./project-technologies";
+import { type InferModel, relations } from "drizzle-orm";
+import { pgEnum, serial, timestamp, varchar } from "drizzle-orm/pg-core";
+import { profileTable } from "./_table";
 import { experienceTech } from "./experience-technologies";
-import {
-  pgEnum,
-  pgTable,
-  serial,
-  timestamp,
-  varchar,
-} from "drizzle-orm/pg-core";
+import { projectTech } from "./project-technologies";
 
 export const technologiesStatus = pgEnum("technologies_status", [
   "pending",
   "approved",
 ]);
-export const technologies = pgTable("technologies", {
+
+export const technologies = profileTable("technologies", {
   id: serial("id").primaryKey().notNull(),
   name: varchar("name", { length: 255 }).notNull(),
   slug: varchar("slug", { length: 255 }).unique().notNull(),
