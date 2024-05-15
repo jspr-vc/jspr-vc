@@ -28,7 +28,7 @@ export function useDebouncedCallback<TParams, TResult = void>(
     return () => {
       clearTimeout(handler);
     };
-  }, [value, delay]);
+  }, [value, delay, callback]);
 }
 
 export function useSearch<T>(

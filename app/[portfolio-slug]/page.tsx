@@ -1,10 +1,10 @@
-import { getPortfolioWithRelations, getPortfolios } from "@/queries";
-import { PortfolioPage } from "../_portfolio";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { sanitizeMarkdown } from "@/lib/sanitize-md";
 import { env } from "@/env.mjs";
 import { portfolioOgParams } from "@/lib/og-params";
+import { sanitizeMarkdown } from "@/lib/sanitize-md";
+import { getPortfolioWithRelations, getPortfolios } from "@/queries";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { PortfolioPage } from "../_portfolio";
 
 export const revalidate = 30;
 

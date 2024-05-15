@@ -1,7 +1,7 @@
 "use client";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import FormLoading from "./_form-loading";
 import { useRouter } from "next/navigation";
+import FormLoading from "./_form-loading";
 
 export default function Loading() {
   const router = useRouter();

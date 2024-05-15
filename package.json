@@ -8,7 +8,7 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "typecheck": "tsc --noEmit",
-    "env:init": "sh ./env-init.sh local",
+    "env:init": "sh ./env-init.sh",
     "env:init:staging": "sh ./env-init.sh staging",
     "env:init:prod": "sh ./env-init.sh prod",
     "preview": "next build && next start",
@@ -66,19 +66,13 @@
     "zod": "3.22.3"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.7.3",
     "@ianvs/prettier-plugin-sort-imports": "4.0.2",
     "@types/node": "20.4.2",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.7",
-    "@typescript-eslint/eslint-plugin": "6.0.0",
-    "@typescript-eslint/parser": "6.0.0",
     "autoprefixer": "10.4.14",
     "drizzle-kit": "0.19.5",
-    "eslint": "8.44.0",
-    "eslint-config-next": "13.4.9",
-    "eslint-config-prettier": "8.8.0",
-    "eslint-plugin-react": "7.32.2",
-    "eslint-plugin-tailwindcss": "3.13.0",
     "husky": "8.0.3",
     "lint-staged": "13.2.3",
     "pg": "8.11.3",
@@ -89,8 +83,7 @@
     "typescript": "5.1.6"
   },
   "lint-staged": {
-    "*.js": "eslint --cache --fix",
-    "**": "prettier --write --ignore-unknown"
+    "**": "biome check --apply --staged"
   },
   "packageManager": "pnpm@8.6.1"
 }

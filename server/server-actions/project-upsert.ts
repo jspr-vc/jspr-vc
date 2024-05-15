@@ -1,14 +1,14 @@
 "use server";
-import {
-  insertProjectSchema,
-  type InsertProjectSchema,
-} from "@/lib/validators";
-import { projects } from "@/db/schema";
 import { db } from "@/db/client";
-import { eq } from "drizzle-orm";
+import { projects } from "@/db/schema";
 import { projectTech } from "@/db/schema/project-technologies";
-import { revalidateTag } from "next/cache";
+import {
+  type InsertProjectSchema,
+  insertProjectSchema,
+} from "@/lib/validators";
+import { eq } from "drizzle-orm";
 import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
 import { authOptions } from "../auth-options";
 
 export async function upsertProject(formData: InsertProjectSchema) {
@@ -78,7 +78,7 @@ export async function upsertProject(formData: InsertProjectSchema) {
     });
   });
 
-  revalidateTag(`/dashboard/projects`);
+  revalidateTag("/dashboard/projects");
   revalidateTag(`/${session.user.portfolioSlug}`);
   return result;
 }

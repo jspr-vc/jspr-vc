@@ -1,11 +1,11 @@
 import "@/styles/github-markdown.css";
+import { LinkButton } from "@/components/ui/button";
 import { getPost } from "@/queries";
+import { authOptions } from "@/server/auth-options";
+import { IconEdit } from "@tabler/icons-react";
+import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 import { PostPageContent } from "../../_post";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/server/auth-options";
-import { LinkButton } from "@/components/ui/button";
-import { IconEdit } from "@tabler/icons-react";
 
 export const dynamic = "force-dynamic";
 type Props = {

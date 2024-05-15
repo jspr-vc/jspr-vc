@@ -1,11 +1,11 @@
-import { getServerSession } from "next-auth";
-import { ExperienceForm } from "../../_form";
-import { authOptions } from "@/server/auth-options";
-import { notFound, redirect } from "next/navigation";
-import { getAllTech, getExp } from "@/queries";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LinkButton } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getAllTech, getExp } from "@/queries";
+import { authOptions } from "@/server/auth-options";
 import { IconArrowLeft } from "@tabler/icons-react";
+import { getServerSession } from "next-auth";
+import { notFound, redirect } from "next/navigation";
+import { ExperienceForm } from "../../_form";
 import ExperienceEditDangerZone from "./_danger_zone";
 
 interface Props {
@@ -21,7 +21,7 @@ export default async function ExperienceEditPage({ params: { id } }: Props) {
   }
   const portfolioId = session.user.portfolioId;
   const techPromise = getAllTech();
-  const experiencePromise = getExp(parseInt(id));
+  const experiencePromise = getExp(Number.parseInt(id));
 
   const [technologies, experience] = await Promise.all([
     techPromise,

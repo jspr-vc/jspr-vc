@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { ComponentProps } from "react";
+import type { ComponentProps } from "react";
 
 export default function Loading({
   className,
@@ -18,7 +18,7 @@ export default function Loading({
       {...props}
     >
       {new Array(3).fill(0).map((_, i) => (
-        <Card className="min-h-[200px]">
+        <Card className="min-h-[200px]" key={i}>
           <CardHeader>
             <Skeleton key={i} className="h-6 w-40" />
           </CardHeader>

@@ -33,7 +33,7 @@ export const getPost = cache(async (slugOrId: string) => {
       },
     },
     where: (posts) =>
-      or(eq(posts.slug, slugOrId), eq(posts.id, parseInt(slugOrId))),
+      or(eq(posts.slug, slugOrId), eq(posts.id, Number.parseInt(slugOrId))),
   });
 });
 

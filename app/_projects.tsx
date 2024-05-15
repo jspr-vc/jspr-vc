@@ -1,3 +1,4 @@
+import { MarkdownNoHeadings } from "@/components/ui/md";
 import {
   TypographyH2,
   TypographyH4,
@@ -6,7 +7,6 @@ import {
 import type { GetPortfolioWithRelations } from "@/queries";
 import NextImage from "next/image";
 import { StackItem } from "./_stack-item";
-import { MarkdownNoHeadings } from "@/components/ui/md";
 
 interface Props {
   projects: GetPortfolioWithRelations["projects"];

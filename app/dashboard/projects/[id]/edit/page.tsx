@@ -1,11 +1,11 @@
-import { getServerSession } from "next-auth";
-import { ProjectForm } from "../../_form";
-import { authOptions } from "@/server/auth-options";
-import { notFound, redirect } from "next/navigation";
-import { getAllTech, getProject } from "@/queries";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LinkButton } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getAllTech, getProject } from "@/queries";
+import { authOptions } from "@/server/auth-options";
 import { IconArrowLeft } from "@tabler/icons-react";
+import { getServerSession } from "next-auth";
+import { notFound, redirect } from "next/navigation";
+import { ProjectForm } from "../../_form";
 import ProjectEditDangerZone from "./_danger_zone";
 
 interface Props {
@@ -21,7 +21,7 @@ export default async function ProjectEditPage({ params: { id } }: Props) {
   }
 
   const techPromise = getAllTech();
-  const projectPromise = getProject(parseInt(id));
+  const projectPromise = getProject(Number.parseInt(id));
   const portfolioId = session.user.portfolioId;
 
   const [technologies, project] = await Promise.all([

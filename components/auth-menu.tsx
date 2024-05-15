@@ -1,5 +1,10 @@
 "use client";
-import { User } from "next-auth";
+import type { GetPortfolio } from "@/queries";
+import { IconBrandTabler, IconLogout, IconUser } from "@tabler/icons-react";
+import type { User } from "next-auth";
+import { signOut } from "next-auth/react";
+import NextLink from "next/link";
+import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   DropdownMenu,
@@ -10,11 +15,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { IconBrandTabler, IconLogout, IconUser } from "@tabler/icons-react";
-import { signOut } from "next-auth/react";
-import NextLink from "next/link";
-import type { GetPortfolio } from "@/queries";
-import { useRouter } from "next/navigation";
 
 interface Props {
   user: User;

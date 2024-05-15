@@ -1,8 +1,8 @@
 import { ImageResponse, type NextRequest } from "next/server";
 import { GithubIcon } from "./_github_icon";
+import { LinkIcon } from "./_link_icon";
 import { LinkedinIcon } from "./_linkedin_icon";
 import { TwitterIcon } from "./_twitter_icon";
-import { LinkIcon } from "./_link_icon";
 
 export const runtime = "edge";
 

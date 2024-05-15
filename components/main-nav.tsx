@@ -1,8 +1,8 @@
 import Link from "next/link";
 
-import type { NavItem } from "@/types/nav";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
+import type { NavItem } from "@/types/nav";
 
 interface MainNavProps {
   items?: NavItem[];

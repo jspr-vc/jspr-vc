@@ -1,12 +1,12 @@
 "use client";
-import type { GetPortfolioWithRelations } from "@/queries";
+import { Badge } from "@/components/ui/badge";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Badge } from "@/components/ui/badge";
+import type { GetPortfolioWithRelations } from "@/queries";
 import { useState } from "react";
 
 interface Props {

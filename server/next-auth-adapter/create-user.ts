@@ -1,8 +1,8 @@
-import type { Adapter, AdapterUser } from "next-auth/adapters";
-import { db } from "@/db/client";
 import { randomUUID } from "node:crypto";
+import { db } from "@/db/client";
 import { portfolios, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import type { Adapter, AdapterUser } from "next-auth/adapters";
 
 export const createUser: Adapter["createUser"] = async (payload) => {
   return await db.transaction(async (tx) => {

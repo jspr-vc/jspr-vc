@@ -26,8 +26,7 @@ I chose the latest in tech (as of July 2023) as the stack for this project prima
 - [Zod](https://github.com/colinhacks/zod)
 - [React Hook Form](https://www.react-hook-form.com/)
 - [date-fns](https://date-fns.org/)
-- [Prettier](https://prettier.io/)
-- [Eslint](https://eslint.org/)
+- [Biome](https://biomejs.dev/)
 - Github Actions
 - Docker
 

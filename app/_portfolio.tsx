@@ -7,11 +7,11 @@ import {
   TypographyLarge,
 } from "@/components/ui/typography";
 import type { GetPortfolioWithRelations } from "@/queries";
-import { ExperienceList } from "./_experiences";
-import { SocialLinks } from "./_social-links";
 import NextLink from "next/link";
-import { ProjectList } from "./_projects";
+import { ExperienceList } from "./_experiences";
 import { PostList } from "./_posts";
+import { ProjectList } from "./_projects";
+import { SocialLinks } from "./_social-links";
 
 interface PortfolioPageProps {
   portfolio: GetPortfolioWithRelations;

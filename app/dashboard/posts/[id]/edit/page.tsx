@@ -1,11 +1,11 @@
-import { getServerSession } from "next-auth";
-import { PostForm } from "../../_form";
-import { authOptions } from "@/server/auth-options";
-import { notFound, redirect } from "next/navigation";
-import { getPost } from "@/queries";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LinkButton } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getPost } from "@/queries";
+import { authOptions } from "@/server/auth-options";
 import { IconArrowLeft } from "@tabler/icons-react";
+import { getServerSession } from "next-auth";
+import { notFound, redirect } from "next/navigation";
+import { PostForm } from "../../_form";
 import PostEditDangerZone from "./_danger_zone";
 
 interface Props {

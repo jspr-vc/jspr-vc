@@ -1,7 +1,7 @@
 import { db } from "@/db/client";
 import { verificationTokens } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
-import { Adapter } from "next-auth/adapters";
+import type { Adapter } from "next-auth/adapters";
 
 export const useVerificationToken: Adapter["useVerificationToken"] = async (
   token,

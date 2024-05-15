@@ -1,9 +1,9 @@
 "use server";
+import { db } from "@/db/client";
 import { experiences } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
-import { revalidateTag } from "next/cache";
-import { db } from "@/db/client";
 import { getServerSession } from "next-auth";
+import { revalidateTag } from "next/cache";
 import { authOptions } from "../auth-options";
 
 export async function deleteExperience(experienceId: number) {
@@ -22,7 +22,7 @@ export async function deleteExperience(experienceId: number) {
     )
     .returning();
 
-  revalidateTag(`/dashboard/experiences`);
+  revalidateTag("/dashboard/experiences");
   revalidateTag(`/dashboard/experiences/${experienceId}/edit`);
   revalidateTag(`/${session.user.portfolioSlug}`);
   return result;

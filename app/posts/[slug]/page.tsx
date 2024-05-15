@@ -1,12 +1,12 @@
 import "@/styles/github-markdown.css";
-import { getPublicPost, getPublicPosts } from "@/queries";
-import { notFound } from "next/navigation";
-import { sanitizeMarkdown } from "@/lib/sanitize-md";
-import type { Metadata } from "next";
-import { env } from "@/env.mjs";
 import { siteConfig } from "@/config/site";
-import { PostPageContent } from "../_post";
+import { env } from "@/env.mjs";
 import { postOgParams } from "@/lib/og-params";
+import { sanitizeMarkdown } from "@/lib/sanitize-md";
+import { getPublicPost, getPublicPosts } from "@/queries";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { PostPageContent } from "../_post";
 
 export const revalidate = 30;
 

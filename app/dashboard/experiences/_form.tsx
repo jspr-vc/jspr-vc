@@ -1,18 +1,10 @@
 "use client";
 import "@uploadthing/react/styles.css";
-import { insertExperienceSchema } from "@/lib/validators";
-import type { GetExp, GetAllTech } from "@/queries";
-import {
-  type InsertTechnology,
-  upsertExperience,
-} from "@/server/server-actions";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { TypographyH4 } from "@/components/ui/typography";
+import type { UploadRouter } from "@/app/api/uploadthing/core";
 import { TechnologyAdd } from "@/components/add-tech-button";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -21,7 +13,22 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useTransition } from "react";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Textarea } from "@/components/ui/textarea";
+import { TypographyH4 } from "@/components/ui/typography";
+import { cn } from "@/lib/utils";
+import { insertExperienceSchema } from "@/lib/validators";
+import type { GetAllTech, GetExp } from "@/queries";
+import {
+  type InsertTechnology,
+  upsertExperience,
+} from "@/server/server-actions";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   IconCalendar,
   IconDeviceFloppy,
@@ -29,18 +36,11 @@ import {
   IconTrash,
   IconX,
 } from "@tabler/icons-react";
-import { Badge } from "@/components/ui/badge";
-import { useRouter } from "next/navigation";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
 import { UploadDropzone } from "@uploadthing/react";
-import type { UploadRouter } from "@/app/api/uploadthing/core";
+import { format } from "date-fns";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { useForm } from "react-hook-form";
 
 interface Props {
   experience?: GetExp;

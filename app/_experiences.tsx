@@ -16,9 +16,9 @@ import {
 import { cn } from "@/lib/utils";
 import type { GetPortfolioWithRelations } from "@/queries";
 import { format } from "date-fns/esm";
-import { StackItem } from "./_stack-item";
-import NextLink from "next/link";
 import NextImage from "next/image";
+import NextLink from "next/link";
+import { StackItem } from "./_stack-item";
 
 interface Props {
   experiences: GetPortfolioWithRelations["experiences"];

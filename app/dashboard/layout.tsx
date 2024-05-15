@@ -1,9 +1,9 @@
-import { ReactNode } from "react";
 import { AuthMenu } from "@/components/auth-menu";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/server/auth-options";
-import { redirect } from "next/navigation";
 import { preloadGetPortfolio } from "@/queries";
+import { authOptions } from "@/server/auth-options";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import type { ReactNode } from "react";
 import DashboardTabs from "./_tabs";
 
 interface Props {
