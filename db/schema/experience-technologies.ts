@@ -1,7 +1,7 @@
 import { type InferModel, relations } from "drizzle-orm";
-import { technologies } from "./technologies";
-import { experiences } from "./experience";
 import { integer, pgTable, primaryKey, timestamp } from "drizzle-orm/pg-core";
+import { experiences } from "./experience";
+import { technologies } from "./technologies";
 
 /**
  * This is a join table for "experience" and "technologies" (Many to Many)

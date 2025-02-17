@@ -26,50 +26,50 @@ const socialLinksSchema = z.object({
 });
 
 export const updatePortfolioSchema = createInsertSchema(portfolios, {
-  userId: (schema) => schema.userId.optional(),
-  publicEmail: (schema) => schema.publicEmail.email().or(emptyString),
-  slug: (schema) => schema.slug.regex(slugRegex),
-  headline: (schema) => schema.headline.max(255),
-  subheading: (schema) => schema.subheading.max(255),
-  name: (schema) => schema.name.max(255),
+  userId: (userId) => userId.optional(),
+  publicEmail: (publicEmail) => publicEmail.email().or(emptyString),
+  slug: (slug) => slug.regex(slugRegex),
+  headline: (headline) => headline.max(255),
+  subheading: (subheading) => subheading.max(255),
+  name: (name) => name.max(255),
   socialLinks: socialLinksSchema,
 });
 
 export const insertExperienceSchema = createInsertSchema(experiences, {
-  companyName: (schema) => schema.companyName.min(3).max(255),
-  jobTitle: (schema) => schema.jobTitle.min(3).max(255),
-  jobDescription: (schema) => schema.jobDescription.max(2048),
-  companyWebsite: (schema) => schema.companyWebsite.url().or(emptyString),
-  companyLogo: (schema) => schema.companyLogo.url().or(emptyString),
+  companyName: (companyName) => companyName.min(3).max(255),
+  jobTitle: (jobTitle) => jobTitle.min(3).max(255),
+  jobDescription: (jobDescription) => jobDescription.max(2048),
+  companyWebsite: (companyWebsite) => companyWebsite.url().or(emptyString),
+  companyLogo: (companyLogo) => companyLogo.url().or(emptyString),
 }).extend({
   stack: z.array(z.number().positive()),
 });
 
 export const insertTechnologiesSchema = createInsertSchema(technologies, {
-  slug: (schema) => schema.slug.min(1).regex(slugRegex),
-  name: (schema) => schema.name.min(1).max(255),
-  description: (schema) => schema.description.max(2048),
-  icon: (schema) => schema.icon.url().or(z.literal("")),
-  createdAt: (schema) => schema.createdAt.optional(),
-  updatedAt: (schema) => schema.updatedAt.optional(),
-  createdBy: (schema) => schema.createdBy.optional(),
-  updatedBy: (schema) => schema.updatedBy.optional(),
+  slug: (slug) => slug.min(1).regex(slugRegex),
+  name: (name) => name.min(1).max(255),
+  description: (description) => description.max(2048),
+  icon: (icon) => icon.url().or(z.literal("")),
+  createdAt: (createdAt) => createdAt.optional(),
+  updatedAt: (updatedAt) => updatedAt.optional(),
+  createdBy: (createdBy) => createdBy.optional(),
+  updatedBy: (updatedBy) => updatedBy.optional(),
 });
 
 export const insertProjectSchema = createInsertSchema(projects, {
-  slug: (schema) => schema.slug.min(1).regex(slugRegex),
-  name: (schema) => schema.name.min(1).max(255),
-  thumbnail: (schema) => schema.thumbnail.url().or(emptyString),
-  body: (schema) => schema.body.max(10000),
+  slug: (slug) => slug.min(1).regex(slugRegex),
+  name: (name) => name.min(1).max(255),
+  thumbnail: (thumbnail) => thumbnail.url().or(emptyString),
+  body: (body) => body.max(10000),
 }).extend({
   stack: z.array(z.number().positive()),
 });
 
 export const insertPostSchema = createInsertSchema(posts, {
-  slug: (schema) => schema.slug.min(1).regex(slugRegex),
-  title: (schema) => schema.title.min(1).max(255),
-  thumbnail: (schema) => schema.thumbnail.url().or(emptyString),
-  body: (schema) => schema.body.max(10000),
+  slug: (slug) => slug.min(1).regex(slugRegex),
+  title: (title) => title.min(1).max(255),
+  thumbnail: (thumbnail) => thumbnail.url().or(emptyString),
+  body: (body) => body.max(10000),
 });
 
 export type UpdatePortfolioSchema = z.infer<typeof updatePortfolioSchema>;

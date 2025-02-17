@@ -8,7 +8,7 @@ import { env } from "@/env.mjs";
 import { cn } from "@/lib/utils";
 import type { GetPortfolioWithRelations } from "@/queries";
 import { IconArrowUpRight } from "@tabler/icons-react";
-import { format } from "date-fns/esm";
+import { format } from "date-fns";
 import NextImage from "next/image";
 import NextLink from "next/link";
 

@@ -1,15 +1,15 @@
+import { ThemeToggle } from "@/components/theme-toggle";
+import { MarkdownWithCode } from "@/components/ui/md-prism";
+import { Separator } from "@/components/ui/separator";
 import {
   TypographyH2,
   TypographyLarge,
   TypographySmall,
 } from "@/components/ui/typography";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { Separator } from "@/components/ui/separator";
-import { format } from "date-fns/esm";
+import type { GetPublicPost } from "@/queries";
+import { format } from "date-fns";
 import NextImage from "next/image";
 import NextLink from "next/link";
-import type { GetPublicPost } from "@/queries";
-import { MarkdownWithCode } from "@/components/ui/md-prism";
 
 interface Props {
   post: NonNullable<GetPublicPost>;

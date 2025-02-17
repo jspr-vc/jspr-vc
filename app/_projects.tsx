@@ -1,3 +1,4 @@
+import { MarkdownNoHeadings } from "@/components/ui/md";
 import {
   TypographyH2,
   TypographyH4,
@@ -6,7 +7,6 @@ import {
 import type { GetPortfolioWithRelations } from "@/queries";
 import NextImage from "next/image";
 import { StackItem } from "./_stack-item";
-import { MarkdownNoHeadings } from "@/components/ui/md";
 
 interface Props {
   projects: GetPortfolioWithRelations["projects"];
@@ -44,8 +44,11 @@ export function ProjectList({ projects = [] }: Props) {
 
               {project.stack.length > 0 && (
                 <div className="flex flex-wrap gap-2 items-center">
-                  {project.stack.map((projectTech, i) => (
-                    <StackItem key={i} tech={projectTech.tech} />
+                  {project.stack.map((projectTech) => (
+                    <StackItem
+                      key={`${projectTech.projectId}-${projectTech.techId}`}
+                      tech={projectTech.tech}
+                    />
                   ))}
                 </div>
               )}

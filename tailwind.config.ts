@@ -1,6 +1,8 @@
-/** @type {import('tailwindcss').Config} */
-// eslint-disable-next-line no-undef
-module.exports = {
+import type { Config } from "tailwindcss";
+import twAnimate from "tailwindcss-animate";
+import { withUt } from "uploadthing/tw";
+
+const twConfig: Config = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -59,12 +61,12 @@ module.exports = {
       },
       keyframes: {
         "accordion-down": {
-          from: { height: 0 },
+          from: { height: "0px" },
           to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: 0 },
+          to: { height: "0px" },
         },
       },
       animation: {
@@ -73,6 +75,7 @@ module.exports = {
       },
     },
   },
-  // eslint-disable-next-line no-undef
-  plugins: [require("tailwindcss-animate")],
+  plugins: [twAnimate],
 };
+
+module.exports = withUt(twConfig);

@@ -24,11 +24,11 @@ import {
   IconLoader2,
   IconSend,
 } from "@tabler/icons-react";
-import { format } from "date-fns/esm";
+import { format } from "date-fns";
+import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
-import NextLink from "next/link";
 
 interface Props {
   post?: GetPost;

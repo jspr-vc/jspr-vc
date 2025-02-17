@@ -1,18 +1,16 @@
-import { getPortfolioWithRelations, getPortfolios } from "@/queries";
-import { PortfolioPage } from "../_portfolio";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { sanitizeMarkdown } from "@/lib/sanitize-md";
 import { env } from "@/env.mjs";
 import { portfolioOgParams } from "@/lib/og-params";
+import { sanitizeMarkdown } from "@/lib/sanitize-md";
+import { getPortfolioWithRelations, getPortfolios } from "@/queries";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { PortfolioPage } from "../_portfolio";
 
 export const revalidate = 30;
 
 type Props = {
-  params: {
-    "portfolio-slug": string;
-  };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ "portfolio-slug": string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export async function generateStaticParams() {
@@ -25,9 +23,11 @@ export async function generateStaticParams() {
   });
 }
 
-export async function generateMetadata({
-  params: { "portfolio-slug": portfolioSlug = "" },
-}: Props): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
+
+  const { "portfolio-slug": portfolioSlug = "" } = params;
+
   const portfolio = await getPortfolioWithRelations(portfolioSlug);
   const title = `${portfolio?.name || "Portfolio"} — Portfolio`;
   const description =
@@ -63,9 +63,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function PortfolioIndividualPage({
-  params: { "portfolio-slug": portofolioSlug = "" },
-}: Props) {
+export default async function PortfolioIndividualPage(props: Props) {
+  const params = await props.params;
+  const { "portfolio-slug": portofolioSlug = "" } = params;
   const portfolio = await getPortfolioWithRelations(portofolioSlug);
 
   if (!portfolio) {

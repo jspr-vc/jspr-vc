@@ -1,15 +1,16 @@
 import { db } from "@/db/client";
 import { portfolios } from "@/db/schema";
-import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
+import { NextResponse } from "next/server";
 
 interface Props {
-  params: {
+  params: Promise<{
     userId: string;
-  };
+  }>;
 }
 
-export async function GET(_: Request, { params }: Props) {
+export async function GET(_: Request, props: Props) {
+  const params = await props.params;
   const portfolio = await db.query.portfolios.findFirst({
     where: eq(portfolios.userId, params.userId),
   });

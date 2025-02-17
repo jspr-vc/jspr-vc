@@ -1,3 +1,4 @@
+import { type InferModel, relations } from "drizzle-orm";
 import {
   integer,
   pgEnum,
@@ -8,7 +9,6 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { portfolios } from "./portfolio";
-import { InferModel, relations } from "drizzle-orm";
 
 export const postStatus = pgEnum("post_status", [
   "draft",

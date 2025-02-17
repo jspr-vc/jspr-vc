@@ -1,19 +1,20 @@
 import "@/styles/github-markdown.css";
+import { LinkButton } from "@/components/ui/button";
 import { getPost } from "@/queries";
+import { authOptions } from "@/server/auth-options";
+import { IconEdit } from "@tabler/icons-react";
+import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 import { PostPageContent } from "../../_post";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/server/auth-options";
-import { LinkButton } from "@/components/ui/button";
-import { IconEdit } from "@tabler/icons-react";
 
 export const dynamic = "force-dynamic";
 type Props = {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export default async function PostPage({ params }: Props) {
+export default async function PostPage(props: Props) {
+  const params = await props.params;
   const session = await getServerSession(authOptions);
   if (!session?.user) {
     notFound();

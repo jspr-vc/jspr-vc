@@ -1,7 +1,7 @@
 import { type InferModel, relations } from "drizzle-orm";
-import { technologies } from "./technologies";
-import { projects } from "./project";
 import { integer, pgTable, primaryKey, timestamp } from "drizzle-orm/pg-core";
+import { projects } from "./project";
+import { technologies } from "./technologies";
 
 export const projectTech = pgTable(
   "project_technologies",

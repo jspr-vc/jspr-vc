@@ -1,7 +1,7 @@
+import dotenv from "dotenv";
 import { eq } from "drizzle-orm";
 import { db } from "./client";
-import { NewTechnologies, technologies } from "./schema";
-import dotenv from "dotenv";
+import { type NewTechnologies, technologies } from "./schema";
 dotenv.config({ path: ".env" });
 
 /**

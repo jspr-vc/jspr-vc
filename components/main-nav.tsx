@@ -1,8 +1,8 @@
 import Link from "next/link";
 
-import type { NavItem } from "@/types/nav";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
+import type { NavItem } from "@/types/nav";
 
 interface MainNavProps {
   items?: NavItem[];
@@ -16,11 +16,11 @@ export function MainNav({ items }: MainNavProps) {
       </Link>
       {items?.length ? (
         <nav className="flex gap-6">
-          {items?.map(
-            (item, index) =>
+          {items.map(
+            (item) =>
               item.href && (
                 <Link
-                  key={index}
+                  key={item.href}
                   href={item.href}
                   className={cn(
                     "flex items-center text-sm font-medium text-muted-foreground",

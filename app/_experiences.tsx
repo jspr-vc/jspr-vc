@@ -15,10 +15,10 @@ import {
 } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import type { GetPortfolioWithRelations } from "@/queries";
-import { format } from "date-fns/esm";
-import { StackItem } from "./_stack-item";
-import NextLink from "next/link";
+import { format } from "date-fns";
 import NextImage from "next/image";
+import NextLink from "next/link";
+import { StackItem } from "./_stack-item";
 
 interface Props {
   experiences: GetPortfolioWithRelations["experiences"];
@@ -75,8 +75,11 @@ export function ExperienceList({ experiences = [] }: Props) {
                   )}
                   {exp.stack.length > 0 && (
                     <div className="mt-4 flex flex-wrap gap-2 items-center">
-                      {exp.stack.map((expTech, i) => (
-                        <StackItem key={i} tech={expTech.tech} />
+                      {exp.stack.map((expTech) => (
+                        <StackItem
+                          key={`${expTech.experienceId}-${expTech.techId}`}
+                          tech={expTech.tech}
+                        />
                       ))}
                     </div>
                   )}

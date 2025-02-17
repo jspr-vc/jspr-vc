@@ -1,6 +1,4 @@
-import { InferModel, relations } from "drizzle-orm";
-import { projectTech } from "./project-technologies";
-import { experienceTech } from "./experience-technologies";
+import { type InferModel, relations } from "drizzle-orm";
 import {
   pgEnum,
   pgTable,
@@ -8,6 +6,8 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
+import { experienceTech } from "./experience-technologies";
+import { projectTech } from "./project-technologies";
 
 export const technologiesStatus = pgEnum("technologies_status", [
   "pending",

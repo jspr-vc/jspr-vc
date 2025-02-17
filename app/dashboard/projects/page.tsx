@@ -1,8 +1,4 @@
-import { getProjectsByPortfolioId } from "@/queries";
-import { authOptions } from "@/server/auth-options";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import NextLink from "next/link";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -11,10 +7,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { format } from "date-fns/esm";
-import { Badge } from "@/components/ui/badge";
-import { IconCirclePlus } from "@tabler/icons-react";
 import { TypographyH3 } from "@/components/ui/typography";
+import { getProjectsByPortfolioId } from "@/queries";
+import { authOptions } from "@/server/auth-options";
+import { IconCirclePlus } from "@tabler/icons-react";
+import { format } from "date-fns";
+import { getServerSession } from "next-auth";
+import NextLink from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function ProjectsDashboard() {
   const session = await getServerSession(authOptions);
@@ -42,8 +42,11 @@ export default async function ProjectsDashboard() {
             <CardContent className="flex-1">
               <div className="flex flex-col gap-2">
                 <div className="flex flex-row gap-2 flex-wrap items-center">
-                  {project.stack.map((projectTech, i) => (
-                    <Badge variant="secondary" key={i}>
+                  {project.stack.map((projectTech) => (
+                    <Badge
+                      variant="secondary"
+                      key={projectTech.techId + projectTech.projectId}
+                    >
                       {projectTech.tech.name}
                     </Badge>
                   ))}

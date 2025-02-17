@@ -1,6 +1,7 @@
 "use client";
 import "@uploadthing/react/styles.css";
-import type { UploadRouter } from "@/app/api/uploadthing/core";
+import { TechnologyAdd } from "@/components/add-tech-button";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -19,9 +20,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
+import { TypographyH4 } from "@/components/ui/typography";
+import { env } from "@/env.mjs";
+import { UploadDropzone } from "@/lib/uploadthing";
 import { cn } from "@/lib/utils";
 import { insertProjectSchema } from "@/lib/validators";
-import type { GetProject, GetAllTech } from "@/queries";
+import type { GetAllTech, GetProject } from "@/queries";
 import { type InsertTechnology, upsertProject } from "@/server/server-actions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -31,15 +35,10 @@ import {
   IconTrash,
   IconX,
 } from "@tabler/icons-react";
-import { UploadDropzone } from "@uploadthing/react";
-import { format } from "date-fns/esm";
+import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { TypographyH4 } from "@/components/ui/typography";
-import { TechnologyAdd } from "@/components/add-tech-button";
-import { Badge } from "@/components/ui/badge";
-import { env } from "@/env.mjs";
 
 interface Props {
   project?: GetProject;
@@ -188,7 +187,7 @@ export function ProjectForm({ project, technologies, portfolioId }: Props) {
                           disabled={(date) =>
                             date > new Date() || date < new Date("1900-01-01")
                           }
-                          initialFocus
+                          autoFocus
                         />
                       </FormControl>
                     </PopoverContent>
@@ -253,12 +252,12 @@ export function ProjectForm({ project, technologies, portfolioId }: Props) {
                           />
                         </div>
                       )}
-                      <UploadDropzone<UploadRouter>
+                      <UploadDropzone
                         endpoint="imageUploader"
                         onClientUploadComplete={(res = []) => {
                           const file = res.at(0);
                           if (file) {
-                            projectForm.setValue("thumbnail", file.fileUrl);
+                            projectForm.setValue("thumbnail", file.url);
                           }
                         }}
                       />

@@ -1,7 +1,7 @@
 import { authOptions } from "@/server/auth-options";
-import { AuthScreen } from "./_auth-screen";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { AuthScreen } from "./_auth-screen";
 
 export default async function SignInPage() {
   const session = await getServerSession(authOptions);

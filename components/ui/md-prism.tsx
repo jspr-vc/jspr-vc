@@ -1,13 +1,13 @@
 "use client";
+import { useTheme } from "next-themes";
+import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import {
   oneDark,
   oneLight,
 } from "react-syntax-highlighter/dist/esm/styles/prism";
-import ReactMarkdown from "react-markdown";
-import { useTheme } from "next-themes";
-import { MarkdownProps, commonMdComponents } from "./md";
 import remarkGfm from "remark-gfm";
+import { type MarkdownProps, commonMdComponents } from "./md";
 import {
   TypographyH1,
   TypographyH2,
@@ -32,12 +32,13 @@ export function MarkdownWithCode({ content, ...props }: MarkdownProps) {
           return !inline && match ? (
             <SyntaxHighlighter
               {...props}
-              children={String(children).replace(/\n$/, "")}
               style={theme === "light" ? oneLight : oneDark}
               className="bg-transparent"
               language={match[1]}
               PreTag="div"
-            />
+            >
+              {String(children).replace(/\n$/, "")}
+            </SyntaxHighlighter>
           ) : (
             <code {...props} className={className}>
               {children}
