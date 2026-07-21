@@ -1,12 +1,11 @@
-version: "3.8"
-
 services:
   postgres:
     container_name: manok_dot_dev_postgres
     image: postgres
     environment:
-      POSTGRES_USER: "op://cli-$APP_ENV/db/username"
-      POSTGRES_PASSWORD: "op://cli-$APP_ENV/db/password" # local only password
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: xxxxxxx # local only password
+      POSTGRES_DB: postgres
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
@@ -28,7 +27,6 @@ services:
       PGADMIN_CONFIG_SERVER_MODE: "False"
     volumes:
       - pgadmin:/var/lib/pgadmin
-
     ports:
       - "${PGADMIN_PORT:-5050}:80"
     networks:

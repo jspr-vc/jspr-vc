@@ -1,6 +1,6 @@
+import type { Adapter } from "next-auth/adapters";
 import { db } from "@/db/client";
 import { verificationTokens } from "@/db/schema";
-import type { Adapter } from "next-auth/adapters";
 
 export const createVerificationToken: Adapter["createVerificationToken"] =
   async (token) => {

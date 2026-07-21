@@ -1,5 +1,8 @@
 "use client";
 
+import { IconLoader2, IconTrash, IconTrashFilled } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -19,9 +22,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { deleteProject } from "@/server/server-actions/project-delete";
-import { IconLoader2, IconTrash, IconTrashFilled } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
 
 interface Props {
   projectId: number;
@@ -47,12 +47,14 @@ export default function ProjectEditDangerZone({ projectId }: Props) {
       </CardHeader>
       <CardFooter>
         <AlertDialog open={opened} onOpenChange={setOpened}>
-          <AlertDialogTrigger asChild>
-            <Button variant="destructive">
-              <IconTrashFilled className="w-4 h-4 mr-2" />
-              Delete Project
-            </Button>
-          </AlertDialogTrigger>
+          <AlertDialogTrigger
+            render={
+              <Button variant="destructive">
+                <IconTrashFilled className="w-4 h-4 mr-2" />
+                Delete Project
+              </Button>
+            }
+          />
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Delete Project?</AlertDialogTitle>

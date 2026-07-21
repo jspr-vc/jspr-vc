@@ -1,5 +1,17 @@
 "use client";
 import "@uploadthing/react/styles.css";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  IconCalendar,
+  IconDeviceFloppy,
+  IconLoader2,
+  IconTrash,
+  IconX,
+} from "@tabler/icons-react";
+import { format } from "date-fns";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { useForm } from "react-hook-form";
 import { TechnologyAdd } from "@/components/add-tech-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,18 +40,6 @@ import {
   type InsertTechnology,
   upsertExperience,
 } from "@/server/server-actions";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  IconCalendar,
-  IconDeviceFloppy,
-  IconLoader2,
-  IconTrash,
-  IconX,
-} from "@tabler/icons-react";
-import { format } from "date-fns";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { useForm } from "react-hook-form";
 
 interface Props {
   experience?: GetExp;
@@ -145,7 +145,11 @@ export function ExperienceForm({
                 <FormItem>
                   <FormLabel>Company Website</FormLabel>
                   <FormControl>
-                    <Input placeholder="ttlstore.com..." {...field} />
+                    <Input
+                      placeholder="ttlstore.com..."
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -231,8 +235,8 @@ export function ExperienceForm({
                   <FormItem className="flex flex-col">
                     <FormLabel>Start Date</FormLabel>
                     <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
+                      <PopoverTrigger
+                        render={
                           <Button
                             variant={"outline"}
                             className={cn(
@@ -246,8 +250,8 @@ export function ExperienceForm({
                             )}
                             <IconCalendar className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
-                        </FormControl>
-                      </PopoverTrigger>
+                        }
+                      />
                       <PopoverContent className="w-auto p-0" align="start">
                         <Calendar
                           mode="single"
@@ -271,8 +275,8 @@ export function ExperienceForm({
                   <FormItem className="flex flex-col">
                     <FormLabel>End Date</FormLabel>
                     <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
+                      <PopoverTrigger
+                        render={
                           <Button
                             variant={"outline"}
                             className={cn(
@@ -286,8 +290,8 @@ export function ExperienceForm({
                             )}
                             <IconCalendar className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
-                        </FormControl>
-                      </PopoverTrigger>
+                        }
+                      />
                       <PopoverContent className="w-auto p-0" align="start">
                         <Calendar
                           mode="single"

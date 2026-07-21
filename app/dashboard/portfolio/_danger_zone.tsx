@@ -1,4 +1,7 @@
 "use client";
+import { IconLoader2, IconTrash, IconTrashFilled } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -18,9 +21,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { deleteUser } from "@/server/server-actions";
-import { IconLoader2, IconTrash, IconTrashFilled } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
 
 export function PortfolioDangerZone() {
   const router = useRouter();
@@ -41,12 +41,14 @@ export function PortfolioDangerZone() {
       </CardHeader>
       <CardFooter>
         <AlertDialog open={opened} onOpenChange={setOpened}>
-          <AlertDialogTrigger asChild>
-            <Button variant="destructive">
-              <IconTrashFilled className="w-4 h-4 mr-2" />
-              Delete Account
-            </Button>
-          </AlertDialogTrigger>
+          <AlertDialogTrigger
+            render={
+              <Button variant="destructive">
+                <IconTrashFilled className="w-4 h-4 mr-2" />
+                Delete Account
+              </Button>
+            }
+          />
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Delete your account?</AlertDialogTitle>

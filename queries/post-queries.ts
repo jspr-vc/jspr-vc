@@ -1,6 +1,6 @@
-import { db } from "@/db/client";
 import { and, eq, or } from "drizzle-orm";
 import { cache } from "react";
+import { db } from "@/db/client";
 
 /* -------------------------------------------------------------------------------------------------
  * Queries
@@ -33,7 +33,7 @@ export const getPost = cache(async (slugOrId: string) => {
       },
     },
     where: (posts) =>
-      or(eq(posts.slug, slugOrId), eq(posts.id, Number.parseInt(slugOrId))),
+      or(eq(posts.slug, slugOrId), eq(posts.id, Number.parseInt(slugOrId, 10))),
   });
 });
 

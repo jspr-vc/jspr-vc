@@ -1,6 +1,6 @@
 "use client";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import FormLoading from "./_form-loading";
 
 export default function Loading() {

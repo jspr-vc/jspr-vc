@@ -1,4 +1,7 @@
 "use server";
+import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { getServerSession } from "next-auth";
 import { db } from "@/db/client";
 import { projects } from "@/db/schema";
 import { projectTech } from "@/db/schema/project-technologies";
@@ -6,9 +9,6 @@ import {
   type InsertProjectSchema,
   insertProjectSchema,
 } from "@/lib/validators";
-import { eq } from "drizzle-orm";
-import { getServerSession } from "next-auth";
-import { revalidateTag } from "next/cache";
 import { authOptions } from "../auth-options";
 
 export async function upsertProject(formData: InsertProjectSchema) {
@@ -76,7 +76,7 @@ export async function upsertProject(formData: InsertProjectSchema) {
     });
   });
 
-  revalidateTag("/dashboard/projects");
-  revalidateTag(`/${session.user.portfolioSlug}`);
+  revalidatePath("/dashboard/projects");
+  revalidatePath(`/${session.user.portfolioSlug}`);
   return result;
 }

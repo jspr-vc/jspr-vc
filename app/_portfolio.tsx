@@ -1,4 +1,5 @@
 "use client";
+import NextLink from "next/link";
 import { Markdown, MarkdownNoHeadings } from "@/components/ui/md";
 import {
   TypographyH1,
@@ -7,7 +8,6 @@ import {
   TypographyLarge,
 } from "@/components/ui/typography";
 import type { GetPortfolioWithRelations } from "@/queries";
-import NextLink from "next/link";
 import { ExperienceList } from "./_experiences";
 import { PostList } from "./_posts";
 import { ProjectList } from "./_projects";
@@ -19,7 +19,7 @@ interface PortfolioPageProps {
 
 export function PortfolioPage({ portfolio }: PortfolioPageProps) {
   return (
-    <div className="mx-auto min-h-screen max-w-screen-xl px-6 py-12 font-sans sm:px-12 sm:py-20 lg:px-24 lg:py-0">
+    <div className="mx-auto min-h-screen max-w-(--breakpoint-xl) px-6 py-12 font-sans sm:px-12 sm:py-20 lg:px-24 lg:py-0">
       <div className="min-h-screen lg:flex lg:justify-between lg:gap-8">
         <header className="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-1/2 lg:flex-col lg:py-24">
           <div className="flex-1">

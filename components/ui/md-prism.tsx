@@ -7,7 +7,7 @@ import {
   oneLight,
 } from "react-syntax-highlighter/dist/esm/styles/prism";
 import remarkGfm from "remark-gfm";
-import { type MarkdownProps, commonMdComponents } from "./md";
+import { commonMdComponents, type MarkdownProps } from "./md";
 import {
   TypographyH1,
   TypographyH2,
@@ -26,10 +26,11 @@ export function MarkdownWithCode({ content, ...props }: MarkdownProps) {
         h4: ({ node, ...props }) => <TypographyH4 {...props} />,
         ...commonMdComponents,
         ...props.components,
-        code: ({ node, inline, className, children, ...props }) => {
+        code: ({ node, className, children, ref, ...props }) => {
+          // biome-ignore lint/correctness/useHookAtTopLevel: react-markdown renders this as a component, so the hook runs at a component's top level
           const { theme } = useTheme();
           const match = /language-(\w+)/.exec(className || "");
-          return !inline && match ? (
+          return match ? (
             <SyntaxHighlighter
               {...props}
               style={theme === "light" ? oneLight : oneDark}

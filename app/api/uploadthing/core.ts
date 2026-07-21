@@ -1,8 +1,8 @@
+import { getServerSession } from "next-auth";
+import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { db } from "@/db/client";
 import { uploads } from "@/db/schema/upload";
 import { authOptions } from "@/server/auth-options";
-import { getServerSession } from "next-auth";
-import { type FileRouter, createUploadthing } from "uploadthing/next";
 
 const f = createUploadthing();
 

@@ -1,9 +1,11 @@
+import { and, eq } from "drizzle-orm";
+import type { Adapter, AdapterAccount } from "next-auth/adapters";
 import { db } from "@/db/client";
 import { accounts } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
-import type { Adapter } from "next-auth/adapters";
 
-export const unlinkAccount: Adapter["unlinkAccount"] = async (payload) => {
+export const unlinkAccount: NonNullable<Adapter["unlinkAccount"]> = async (
+  payload: Pick<AdapterAccount, "provider" | "providerAccountId">,
+) => {
   await db
     .delete(accounts)
     .where(

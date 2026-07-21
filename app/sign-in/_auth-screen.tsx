@@ -1,11 +1,11 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { TypographyH3, TypographyP } from "@/components/ui/typography";
 import {
   IconBrandDiscordFilled,
   IconBrandGithubFilled,
 } from "@tabler/icons-react";
 import { signIn } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import { TypographyH3, TypographyP } from "@/components/ui/typography";
 
 export function AuthScreen() {
   return (

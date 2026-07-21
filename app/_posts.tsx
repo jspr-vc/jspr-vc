@@ -1,16 +1,16 @@
 "use client";
+import { IconArrowUpRight } from "@tabler/icons-react";
+import { format } from "date-fns";
+import NextImage from "next/image";
+import NextLink from "next/link";
 import {
   TypographyH2,
   TypographyH4,
   TypographySmall,
 } from "@/components/ui/typography";
-import { env } from "@/env.mjs";
+import { env } from "@/env-client";
 import { cn } from "@/lib/utils";
 import type { GetPortfolioWithRelations } from "@/queries";
-import { IconArrowUpRight } from "@tabler/icons-react";
-import { format } from "date-fns";
-import NextImage from "next/image";
-import NextLink from "next/link";
 
 interface Props {
   posts: GetPortfolioWithRelations["posts"];
@@ -33,7 +33,7 @@ export function PostList({ posts = [], authorName }: Props) {
             key={post.id}
           >
             <NextImage
-              className="bg-white sm:h-[76px] sm:w-36 w-full flex-shrink-0 shadow aspect-[40/21] rounded"
+              className="bg-white sm:h-[76px] sm:w-36 w-full shrink-0 shadow-sm aspect-40/21 rounded"
               src={
                 post.thumbnail ||
                 `${env.NEXT_PUBLIC_URL}/og/post?${new URLSearchParams({

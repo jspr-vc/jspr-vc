@@ -1,6 +1,3 @@
-import { ThemeToggle } from "@/components/theme-toggle";
-import { LinkButton } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import {
   IconBrandGithub,
   IconBrandLinkedin,
@@ -9,6 +6,9 @@ import {
   IconMail,
   IconWorldWww,
 } from "@tabler/icons-react";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { LinkButton } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 interface Props {
   github?: string;

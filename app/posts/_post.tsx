@@ -1,3 +1,6 @@
+import { format } from "date-fns";
+import NextImage from "next/image";
+import NextLink from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { MarkdownWithCode } from "@/components/ui/md-prism";
 import { Separator } from "@/components/ui/separator";
@@ -7,9 +10,6 @@ import {
   TypographySmall,
 } from "@/components/ui/typography";
 import type { GetPublicPost } from "@/queries";
-import { format } from "date-fns";
-import NextImage from "next/image";
-import NextLink from "next/link";
 
 interface Props {
   post: NonNullable<GetPublicPost>;
@@ -17,7 +17,7 @@ interface Props {
 
 export function PostPageContent({ post }: Props) {
   return (
-    <div className="mx-auto min-h-screen max-w-screen-xl py-16 px-4 sm:px-8 lg:py-20">
+    <div className="mx-auto min-h-screen max-w-(--breakpoint-xl) py-16 px-4 sm:px-8 lg:py-20">
       <div className="flex flex-col gap-8">
         <header className="flex flex-col gap-1">
           <TypographyH2 className="font-extrabold leading-none">
@@ -44,7 +44,7 @@ export function PostPageContent({ post }: Props) {
           </div>
         </header>
         {post.thumbnail && (
-          <div className="flex flex-col gap-2 aspect-[41/20]">
+          <div className="flex flex-col gap-2 aspect-41/20">
             <NextImage
               className="rounded"
               alt="thumbnail"

@@ -1,8 +1,8 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LinkButton, type LinkButtonProps } from "@/components/ui/button";
-import { usePathname } from "next/navigation";
 
 interface Props {
   isAdmin?: boolean;
