@@ -25,6 +25,8 @@ export const env = createEnv({
 
     UPLOADTHING_SECRET: z.string(),
     UPLOADTHING_APP_ID: z.string(),
+
+    DEFAULT_PORTFOLIO_ID: z.coerce.number().int().optional(),
   },
 
   runtimeEnv: {
@@ -44,5 +46,7 @@ export const env = createEnv({
 
     UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,
     UPLOADTHING_APP_ID: process.env.UPLOADTHING_APP_ID,
+
+    DEFAULT_PORTFOLIO_ID: process.env.DEFAULT_PORTFOLIO_ID,
   },
 });

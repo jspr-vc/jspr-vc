@@ -2,6 +2,7 @@ import { desc, eq, or } from "drizzle-orm";
 import { cache } from "react";
 import { db } from "@/db/client";
 import { portfolios } from "@/db/schema";
+import { env } from "@/env";
 
 /* -------------------------------------------------------------------------------------------------
  * Queries
@@ -43,10 +44,15 @@ export const getPortfolio = cache(async (idOrSlug: string) => {
 });
 
 /*
- * Get the first portfolio in the database. This is most likely the owner of the project.
+ * Get the default portfolio shown on the "/" route. Uses DEFAULT_PORTFOLIO_ID
+ * when set, otherwise falls back to the first portfolio in the database
+ * (most likely the owner of the project).
  */
 export const getFirstPortfolio = cache(async () => {
   const portfolio = await db.query.portfolios.findFirst({
+    where: env.DEFAULT_PORTFOLIO_ID
+      ? eq(portfolios.id, env.DEFAULT_PORTFOLIO_ID)
+      : undefined,
     with: {
       user: true,
       experiences: {

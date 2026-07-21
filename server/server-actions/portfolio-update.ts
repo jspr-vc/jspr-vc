@@ -8,6 +8,7 @@ import {
   type UpdatePortfolioSchema,
   updatePortfolioSchema,
 } from "@/lib/validators";
+import { getFirstPortfolio } from "@/queries";
 import { authOptions } from "../auth-options";
 
 export async function updatePortfolio(formData: UpdatePortfolioSchema) {
@@ -23,5 +24,12 @@ export async function updatePortfolio(formData: UpdatePortfolioSchema) {
     .returning();
 
   revalidatePath(`/${session.user.portfolioSlug}`);
+
+  // If the edited portfolio is the one rendered on "/", revalidate it too.
+  const defaultPortfolio = await getFirstPortfolio();
+  if (updatedPortfolio.some((p) => p.id === defaultPortfolio?.id)) {
+    revalidatePath("/");
+  }
+
   return updatedPortfolio;
 }
