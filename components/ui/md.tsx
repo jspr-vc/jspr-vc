@@ -11,11 +11,12 @@ import {
 export const commonMdComponents: Components = {
   p: ({ node, ...props }) => <p className="mt-4" {...props} />,
   a: ({ node, ...props }) => <a className="text-blue-400" {...props} />,
-  li: ({ node, ordered, ...props }) => <li className="mb-2" {...props} />,
+  li: ({ node, ...props }) => <li className="mb-2" {...props} />,
   pre: ({ node, ...props }) => (
-    <pre {...props} className="!bg-card/30 border border-muted shadow" />
+    <pre {...props} className="bg-card/30! border border-muted shadow-sm" />
   ),
   img: ({ node, ...props }) => (
+    // biome-ignore lint/performance/noImgElement: markdown renders arbitrary external image URLs; next/image is unsuitable here
     <img
       {...props}
       style={{ maxHeight: 512, ...props.style }}

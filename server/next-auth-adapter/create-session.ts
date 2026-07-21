@@ -1,7 +1,7 @@
-import { db } from "@/db/client";
-import { sessions } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import type { Adapter } from "next-auth/adapters";
+import { db } from "@/db/client";
+import { sessions } from "@/db/schema";
 
 export const createSession: Adapter["createSession"] = async (payload) => {
   const res = await db.transaction(async (tx) => {

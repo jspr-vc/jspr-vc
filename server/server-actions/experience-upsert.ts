@@ -1,13 +1,13 @@
 "use server";
+import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { getServerSession } from "next-auth";
 import { db } from "@/db/client";
-import { experienceTech, experiences } from "@/db/schema";
+import { experiences, experienceTech } from "@/db/schema";
 import {
   type InsertExperienceSchema,
   insertExperienceSchema,
 } from "@/lib/validators";
-import { eq } from "drizzle-orm";
-import { getServerSession } from "next-auth";
-import { revalidateTag } from "next/cache";
 import { authOptions } from "../auth-options";
 
 export async function upsertExperience(formData: InsertExperienceSchema) {
@@ -83,7 +83,7 @@ export async function upsertExperience(formData: InsertExperienceSchema) {
     });
   });
 
-  revalidateTag("/dashboard/experiences");
-  revalidateTag(`/${session.user.portfolioSlug}`);
+  revalidatePath("/dashboard/experiences");
+  revalidatePath(`/${session.user.portfolioSlug}`);
   return result;
 }

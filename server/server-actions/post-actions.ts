@@ -1,11 +1,11 @@
 "use server";
+import { and, eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { getServerSession } from "next-auth";
+import { z } from "zod";
 import { db } from "@/db/client";
 import { type Post, posts } from "@/db/schema";
 import { type InsertPostSchema, insertPostSchema } from "@/lib/validators";
-import { and, eq } from "drizzle-orm";
-import { getServerSession } from "next-auth";
-import { revalidateTag } from "next/cache";
-import { z } from "zod";
 import { authOptions } from "../auth-options";
 
 export async function setPostStatus(
@@ -36,10 +36,10 @@ export async function setPostStatus(
     throw new Error("Publish failed");
   }
 
-  revalidateTag("/dashboard/posts");
-  revalidateTag(`/dashboard/posts/${post.id}/edit`);
-  revalidateTag(`/posts/${result.slug}`);
-  revalidateTag(`/${session.user.portfolioSlug}`);
+  revalidatePath("/dashboard/posts");
+  revalidatePath(`/dashboard/posts/${post.id}/edit`);
+  revalidatePath(`/posts/${result.slug}`);
+  revalidatePath(`/${session.user.portfolioSlug}`);
 
   return result;
 }

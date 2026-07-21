@@ -1,7 +1,7 @@
-import { db } from "@/db/client";
-import { portfolios } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
+import { db } from "@/db/client";
+import { portfolios } from "@/db/schema";
 
 interface Props {
   params: Promise<{

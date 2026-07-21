@@ -16,66 +16,64 @@ export async function GET(req: NextRequest) {
   const excerpt = searchParams.get("excerpt") ?? "";
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        padding: "4rem 6rem",
+        color: "white",
+        backgroundColor: "#000",
+        backgroundImage:
+          "radial-gradient(circle at 25px 25px, #333 2%, transparent 0%), radial-gradient(circle at 100% 80%, rgba(255,255,255,0.1) 0%, transparent 100%)",
+        backgroundSize: "50px 50px, 100% 100%",
+      }}
+    >
       <div
         style={{
-          position: "relative",
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          padding: "4rem 6rem",
-          color: "white",
-          backgroundColor: "#000",
-          backgroundImage:
-            "radial-gradient(circle at 25px 25px, #333 2%, transparent 0%), radial-gradient(circle at 100% 80%, rgba(255,255,255,0.1) 0%, transparent 100%)",
-          backgroundSize: "50px 50px, 100% 100%",
+          position: "absolute",
+          bottom: "1rem",
+          right: "1rem",
+          fontSize: 18,
+          marginBottom: 5,
+          color: "rgba(255,255,255,0.5)",
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            bottom: "1rem",
-            right: "1rem",
-            fontSize: 18,
-            marginBottom: 5,
-            color: "rgba(255,255,255,0.5)",
-          }}
-        >
-          {`${process.env.NEXT_PUBLIC_URL}/posts/${slug}`}
-        </div>
-        <div
-          style={{
-            fontWeight: 800,
-            lineHeight: 1,
-            fontSize: 70,
-          }}
-        >
-          {title}
-        </div>
-        {excerpt && (
-          <div
-            style={{
-              fontSize: 30,
-              fontWeight: 300,
-              color: "rgba(255,255,255,0.5)",
-              padding: "1rem 0",
-            }}
-          >
-            {excerpt}
-          </div>
-        )}
+        {`${process.env.NEXT_PUBLIC_URL}/posts/${slug}`}
+      </div>
+      <div
+        style={{
+          fontWeight: 800,
+          lineHeight: 1,
+          fontSize: 70,
+        }}
+      >
+        {title}
+      </div>
+      {excerpt && (
         <div
           style={{
             fontSize: 30,
             fontWeight: 300,
+            color: "rgba(255,255,255,0.5)",
+            padding: "1rem 0",
           }}
         >
-          {`— ${author}`}
+          {excerpt}
         </div>
+      )}
+      <div
+        style={{
+          fontSize: 30,
+          fontWeight: 300,
+        }}
+      >
+        {`— ${author}`}
       </div>
-    ),
+    </div>,
     {
       width: 1200,
       height: 630,

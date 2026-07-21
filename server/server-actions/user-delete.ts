@@ -1,9 +1,9 @@
 "use server";
+import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { getServerSession } from "next-auth";
 import { db } from "@/db/client";
 import { users } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import { getServerSession } from "next-auth";
-import { revalidateTag } from "next/cache";
 import { authOptions } from "../auth-options";
 
 export async function deleteUser() {
@@ -13,7 +13,7 @@ export async function deleteUser() {
   }
 
   // Deletes are cascaded
-  revalidateTag(`/${session.user.portfolioSlug}`);
+  revalidatePath(`/${session.user.portfolioSlug}`);
   return await db
     .delete(users)
     .where(eq(users.id, session.user.id))

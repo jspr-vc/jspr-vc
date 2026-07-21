@@ -1,10 +1,10 @@
 import "@/styles/github-markdown.css";
+import { IconEdit } from "@tabler/icons-react";
+import { notFound } from "next/navigation";
+import { getServerSession } from "next-auth";
 import { LinkButton } from "@/components/ui/button";
 import { getPost } from "@/queries";
 import { authOptions } from "@/server/auth-options";
-import { IconEdit } from "@tabler/icons-react";
-import { getServerSession } from "next-auth";
-import { notFound } from "next/navigation";
 import { PostPageContent } from "../../_post";
 
 export const dynamic = "force-dynamic";
@@ -27,7 +27,7 @@ export default async function PostPage(props: Props) {
   return (
     <div className="h-full w-full relative">
       <PostPageContent post={post} />
-      <div className="fixed flex gap-4 items-center p-4 bg-card/30 text-foreground rounded-md border border-muted shadow bottom-2 right-2">
+      <div className="fixed flex gap-4 items-center p-4 bg-card/30 text-foreground rounded-md border border-muted shadow-sm bottom-2 right-2">
         <div>This is a preview</div>
         <LinkButton
           href={`/dashboard/posts/${post.id}/edit`}

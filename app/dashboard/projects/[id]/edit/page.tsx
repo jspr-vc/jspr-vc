@@ -1,10 +1,10 @@
+import { IconArrowLeft } from "@tabler/icons-react";
+import { notFound, redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 import { LinkButton } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAllTech, getProject } from "@/queries";
 import { authOptions } from "@/server/auth-options";
-import { IconArrowLeft } from "@tabler/icons-react";
-import { getServerSession } from "next-auth";
-import { notFound, redirect } from "next/navigation";
 import { ProjectForm } from "../../_form";
 import ProjectEditDangerZone from "./_danger_zone";
 
@@ -25,7 +25,7 @@ export default async function ProjectEditPage(props: Props) {
   }
 
   const techPromise = getAllTech();
-  const projectPromise = getProject(Number.parseInt(id));
+  const projectPromise = getProject(Number.parseInt(id, 10));
   const portfolioId = session.user.portfolioId;
 
   const [technologies, project] = await Promise.all([

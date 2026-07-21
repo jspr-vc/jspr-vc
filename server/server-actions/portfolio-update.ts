@@ -1,13 +1,13 @@
 "use server";
+import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { getServerSession } from "next-auth";
 import { db } from "@/db/client";
 import { portfolios } from "@/db/schema";
 import {
   type UpdatePortfolioSchema,
   updatePortfolioSchema,
 } from "@/lib/validators";
-import { eq } from "drizzle-orm";
-import { getServerSession } from "next-auth";
-import { revalidateTag } from "next/cache";
 import { authOptions } from "../auth-options";
 
 export async function updatePortfolio(formData: UpdatePortfolioSchema) {
@@ -22,6 +22,6 @@ export async function updatePortfolio(formData: UpdatePortfolioSchema) {
     .where(eq(portfolios.userId, session.user.id))
     .returning();
 
-  revalidateTag(`/${session.user.portfolioSlug}`);
+  revalidatePath(`/${session.user.portfolioSlug}`);
   return updatedPortfolio;
 }

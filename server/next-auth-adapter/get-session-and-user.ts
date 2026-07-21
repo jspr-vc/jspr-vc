@@ -1,7 +1,7 @@
-import { db } from "@/db/client";
-import { portfolios, sessions, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import type { Adapter, AdapterSession, AdapterUser } from "next-auth/adapters";
+import { db } from "@/db/client";
+import { portfolios, sessions, users } from "@/db/schema";
 
 export const getSessionAndUser: Adapter["getSessionAndUser"] = async (
   sessionToken,

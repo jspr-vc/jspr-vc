@@ -1,5 +1,5 @@
-import { db } from "@/db/client";
 import { NextResponse } from "next/server";
+import { db } from "@/db/client";
 
 export async function GET() {
   const portfolio = await db.query.portfolios.findMany();

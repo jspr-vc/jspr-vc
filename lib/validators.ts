@@ -1,3 +1,5 @@
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
 import {
   experiences,
   portfolios,
@@ -5,8 +7,6 @@ import {
   projects,
   technologies,
 } from "@/db/schema";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
 
 const emptyString = z.literal("");
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;

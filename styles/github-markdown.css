@@ -131,7 +131,7 @@
 }
 
 .markdown-body [hidden] {
-  display: none !important;
+  display: none;
 }
 
 .markdown-body a {
@@ -297,7 +297,7 @@
 }
 
 .markdown-body details:not([open]) > *:not(summary) {
-  display: none !important;
+  display: none;
 }
 
 .markdown-body a:focus,
@@ -451,7 +451,7 @@
 
 .markdown-body .octicon {
   display: inline-block;
-  overflow: visible !important;
+  overflow: visible;
   vertical-align: text-bottom;
   fill: currentColor;
 }
@@ -475,11 +475,11 @@
 }
 
 .markdown-body > *:first-child {
-  margin-top: 0 !important;
+  margin-top: 0;
 }
 
 .markdown-body > *:last-child {
-  margin-bottom: 0 !important;
+  margin-bottom: 0;
 }
 
 .markdown-body a:not([href]) {
@@ -1047,7 +1047,7 @@
   min-width: 1ch;
   font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 1em;
-  font-style: normal !important;
+  font-style: normal;
   font-weight: var(--base-text-weight-normal, 400);
   line-height: 1;
   vertical-align: -0.075em;

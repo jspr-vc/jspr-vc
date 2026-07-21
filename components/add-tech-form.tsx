@@ -1,15 +1,14 @@
 import "@uploadthing/react/styles.css";
-import type { UploadRouter } from "@/app/api/uploadthing/core";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { IconDeviceFloppy, IconLoader2, IconTrash } from "@tabler/icons-react";
+import { useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { UploadDropzone } from "@/lib/uploadthing";
 import { insertTechnologiesSchema } from "@/lib/validators";
 import {
   type InsertTechnology,
   insertTechnology,
 } from "@/server/server-actions";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { IconDeviceFloppy, IconLoader2, IconTrash } from "@tabler/icons-react";
-import { UploadDropzone } from "@uploadthing/react";
-import { useTransition } from "react";
-import { useForm } from "react-hook-form";
 import { Button } from "./ui/button";
 import {
   Form,
@@ -91,6 +90,7 @@ export function TechnologyAddForm({ onSuccess }: Props) {
                 <FormControl>
                   <Textarea
                     {...field}
+                    value={field.value ?? ""}
                     placeholder="A React framework for the web..."
                   />
                 </FormControl>
@@ -122,12 +122,12 @@ export function TechnologyAddForm({ onSuccess }: Props) {
                         />
                       </div>
                     )}
-                    <UploadDropzone<UploadRouter>
+                    <UploadDropzone
                       endpoint="imageUploader"
                       onClientUploadComplete={(res = []) => {
                         const file = res.at(0);
                         if (file) {
-                          form.setValue("icon", file.fileUrl);
+                          form.setValue("icon", file.ufsUrl);
                         }
                       }}
                     />

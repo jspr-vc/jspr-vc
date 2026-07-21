@@ -1,4 +1,7 @@
 "use client";
+import { format } from "date-fns";
+import NextImage from "next/image";
+import NextLink from "next/link";
 import { MarkdownNoHeadings } from "@/components/ui/md";
 import {
   Timeline,
@@ -15,9 +18,6 @@ import {
 } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
 import type { GetPortfolioWithRelations } from "@/queries";
-import { format } from "date-fns";
-import NextImage from "next/image";
-import NextLink from "next/link";
 import { StackItem } from "./_stack-item";
 
 interface Props {

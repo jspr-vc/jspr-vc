@@ -1,4 +1,7 @@
 "use client";
+import { IconLoader2, IconTrash, IconTrashFilled } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -18,9 +21,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { deletePost } from "@/server/server-actions";
-import { IconLoader2, IconTrash, IconTrashFilled } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
 
 interface Props {
   postId: number;
@@ -46,12 +46,14 @@ export default function PostEditDangerZone({ postId }: Props) {
       </CardHeader>
       <CardFooter>
         <AlertDialog open={opened} onOpenChange={setOpened}>
-          <AlertDialogTrigger asChild>
-            <Button variant="destructive">
-              <IconTrashFilled className="w-4 h-4 mr-2" />
-              Delete Post
-            </Button>
-          </AlertDialogTrigger>
+          <AlertDialogTrigger
+            render={
+              <Button variant="destructive">
+                <IconTrashFilled className="w-4 h-4 mr-2" />
+                Delete Post
+              </Button>
+            }
+          />
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Delete Post?</AlertDialogTitle>

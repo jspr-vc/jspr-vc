@@ -1,3 +1,8 @@
+import { IconCirclePlus } from "@tabler/icons-react";
+import { format } from "date-fns";
+import NextLink from "next/link";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 import {
   Card,
   CardContent,
@@ -12,11 +17,6 @@ import {
 } from "@/components/ui/typography";
 import { getPostsByAuthorId } from "@/queries";
 import { authOptions } from "@/server/auth-options";
-import { IconCirclePlus } from "@tabler/icons-react";
-import { format } from "date-fns";
-import { getServerSession } from "next-auth";
-import NextLink from "next/link";
-import { redirect } from "next/navigation";
 
 export default async function PostDashboard() {
   const session = await getServerSession(authOptions);

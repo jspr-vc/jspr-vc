@@ -1,10 +1,11 @@
 import { createEnv } from "@t3-oss/env-nextjs";
-import dotenv from "dotenv";
 import { z } from "zod";
+import { env as envClient } from "./env-client";
 
-dotenv.config({ path: ".env" });
-
+// .env is loaded automatically by Next.js (app) and by the Bun runtime (scripts),
+// so no dotenv is needed here.
 export const env = createEnv({
+  extends: [envClient],
   server: {
     POSTGRES_URL: z.string(),
     POSTGRES_URL_NON_POOLING: z.string(),
@@ -26,11 +27,6 @@ export const env = createEnv({
     UPLOADTHING_APP_ID: z.string(),
   },
 
-  client: {
-    NEXT_PUBLIC_NEXTAUTH_URL: z.string(),
-    NEXT_PUBLIC_URL: z.string(),
-  },
-
   runtimeEnv: {
     POSTGRES_URL: process.env.POSTGRES_URL,
     POSTGRES_URL_NON_POOLING: process.env.POSTGRES_URL_NON_POOLING,
@@ -48,9 +44,5 @@ export const env = createEnv({
 
     UPLOADTHING_SECRET: process.env.UPLOADTHING_SECRET,
     UPLOADTHING_APP_ID: process.env.UPLOADTHING_APP_ID,
-
-    // Client
-    NEXT_PUBLIC_NEXTAUTH_URL: process.env.NEXT_PUBLIC_NEXTAUTH_URL,
-    NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
   },
 });

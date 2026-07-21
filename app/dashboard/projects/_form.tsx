@@ -1,5 +1,17 @@
 "use client";
 import "@uploadthing/react/styles.css";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  IconCalendar,
+  IconDeviceFloppy,
+  IconLoader2,
+  IconTrash,
+  IconX,
+} from "@tabler/icons-react";
+import { format } from "date-fns";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { useForm } from "react-hook-form";
 import { TechnologyAdd } from "@/components/add-tech-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,24 +33,12 @@ import {
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { TypographyH4 } from "@/components/ui/typography";
-import { env } from "@/env.mjs";
+import { env } from "@/env-client";
 import { UploadDropzone } from "@/lib/uploadthing";
 import { cn } from "@/lib/utils";
 import { insertProjectSchema } from "@/lib/validators";
 import type { GetAllTech, GetProject } from "@/queries";
 import { type InsertTechnology, upsertProject } from "@/server/server-actions";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  IconCalendar,
-  IconDeviceFloppy,
-  IconLoader2,
-  IconTrash,
-  IconX,
-} from "@tabler/icons-react";
-import { format } from "date-fns";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { useForm } from "react-hook-form";
 
 interface Props {
   project?: GetProject;
@@ -161,19 +161,23 @@ export function ProjectForm({ project, technologies, portfolioId }: Props) {
                 <FormItem className="flex flex-col">
                   <FormLabel>Start Date</FormLabel>
                   <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant={"outline"}
-                        className={cn(!field.value && "text-muted-foreground")}
-                      >
-                        {field.value ? (
-                          format(field.value, "PPP")
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                        <IconCalendar className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
+                    <PopoverTrigger
+                      render={
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            !field.value && "text-muted-foreground",
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <IconCalendar className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      }
+                    />
                     <PopoverContent className="w-auto p-0" align="start">
                       <FormControl>
                         <Calendar
@@ -203,7 +207,7 @@ export function ProjectForm({ project, technologies, portfolioId }: Props) {
                 <FormItem>
                   <FormLabel>Short Description</FormLabel>
                   <FormControl>
-                    <Textarea {...field} />
+                    <Textarea {...field} value={field.value ?? ""} />
                   </FormControl>
                   <FormDescription>
                     Markdown supported (no headings)

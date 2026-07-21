@@ -1,9 +1,9 @@
+import { IconArrowLeft } from "@tabler/icons-react";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 import { LinkButton } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { authOptions } from "@/server/auth-options";
-import { IconArrowLeft } from "@tabler/icons-react";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 import { PostForm } from "../_form";
 
 export default async function PostAddPage() {

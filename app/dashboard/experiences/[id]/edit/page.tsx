@@ -1,10 +1,10 @@
+import { IconArrowLeft } from "@tabler/icons-react";
+import { notFound, redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
 import { LinkButton } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAllTech, getExp } from "@/queries";
 import { authOptions } from "@/server/auth-options";
-import { IconArrowLeft } from "@tabler/icons-react";
-import { getServerSession } from "next-auth";
-import { notFound, redirect } from "next/navigation";
 import { ExperienceForm } from "../../_form";
 import ExperienceEditDangerZone from "./_danger_zone";
 
@@ -25,7 +25,7 @@ export default async function ExperienceEditPage(props: Props) {
   }
   const portfolioId = session.user.portfolioId;
   const techPromise = getAllTech();
-  const experiencePromise = getExp(Number.parseInt(id));
+  const experiencePromise = getExp(Number.parseInt(id, 10));
 
   const [technologies, experience] = await Promise.all([
     techPromise,

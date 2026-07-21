@@ -1,4 +1,8 @@
 "use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { IconDeviceFloppy, IconLoader2 } from "@tabler/icons-react";
+import { useTransition } from "react";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -14,10 +18,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { updatePortfolioSchema } from "@/lib/validators";
 import type { GetPortfolio } from "@/queries";
 import { updatePortfolio } from "@/server/server-actions";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { IconDeviceFloppy, IconLoader2 } from "@tabler/icons-react";
-import { useTransition } from "react";
-import { useForm } from "react-hook-form";
 
 export interface PortfolioFormProps {
   portfolio: NonNullable<GetPortfolio>;
@@ -52,7 +52,7 @@ export function PortfolioForm({ portfolio }: PortfolioFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={submit}>
-        <div className="flex flex-col gap-4 rounded-md bg-card/30 p-8 shadow-sm border border-muted">
+        <div className="flex flex-col gap-4 rounded-md bg-card/30 p-8 shadow-xs border border-muted">
           <Card>
             <CardHeader>
               <CardTitle>General Info</CardTitle>
@@ -93,7 +93,7 @@ export function PortfolioForm({ portfolio }: PortfolioFormProps) {
                     <FormItem>
                       <FormLabel>Public Email</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} value={field.value ?? ""} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

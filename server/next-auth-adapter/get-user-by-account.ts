@@ -1,7 +1,7 @@
-import { db } from "@/db/client";
-import { accounts, portfolios, users } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import type { Adapter } from "next-auth/adapters";
+import { db } from "@/db/client";
+import { accounts, portfolios, users } from "@/db/schema";
 
 export const getUserByAccount: Adapter["getUserByAccount"] = async (
   payload,

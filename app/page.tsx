@@ -1,9 +1,9 @@
-import { env } from "@/env.mjs";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { env } from "@/env";
 import { portfolioOgParams } from "@/lib/og-params";
 import { sanitizeMarkdown } from "@/lib/sanitize-md";
 import { getFirstPortfolio } from "@/queries";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import { PortfolioPage } from "./_portfolio";
 
 export const revalidate = 30;

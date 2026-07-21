@@ -23,108 +23,104 @@ export async function GET(req: NextRequest) {
   const website = searchParams.get("website") ?? "";
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        padding: "4rem",
+        color: "white",
+        backgroundColor: "#000",
+        backgroundImage:
+          "radial-gradient(circle at 25px 25px, #333 2%, transparent 0%), radial-gradient(circle at 100% 80%, rgba(255,255,255,0.1) 0%, transparent 100%)",
+        backgroundSize: "50px 50px, 100% 100%",
+      }}
+    >
       <div
         style={{
-          position: "relative",
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          padding: "4rem",
-          color: "white",
-          backgroundColor: "#000",
-          backgroundImage:
-            "radial-gradient(circle at 25px 25px, #333 2%, transparent 0%), radial-gradient(circle at 100% 80%, rgba(255,255,255,0.1) 0%, transparent 100%)",
-          backgroundSize: "50px 50px, 100% 100%",
+          fontSize: 25,
+          fontFamily: "Inter",
+          color: "rgba(255,255,255,0.5)",
+          marginBottom: 5,
         }}
       >
-        <div
-          style={{
-            fontSize: 25,
-            fontFamily: "Inter",
-            color: "rgba(255,255,255,0.5)",
-            marginBottom: 5,
-          }}
-        >
-          {url}
-        </div>
-        <div
-          style={{
-            fontWeight: 800,
-            fontSize: 70,
-            fontFamily: "Inter",
-            width: 800,
-          }}
-        >
-          {name}
-        </div>
-        <div
-          style={{
-            fontSize: 30,
-            fontWeight: 300,
-            width: 800,
-          }}
-        >
-          {headline
-            .replaceAll("**", "")
-            .replaceAll("__", "")
-            .replaceAll("~~", "")
-            .replaceAll(/\[(.*)\]\(.*\)/g, "$1")}
-        </div>
-        <div
-          style={{
-            position: "absolute",
-            bottom: "4rem",
-            left: "4rem",
-            display: "flex",
-            alignItems: "center",
-            gap: "2rem",
-          }}
-        >
-          {github && (
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <GithubIcon />
-              <div style={{ fontSize: 20, color: "rgba(255,255,255,0.5)" }}>
-                {github.replace(new RegExp(/.*\.com\//), "").replace(/\/$/, "")}
-              </div>
-            </div>
-          )}
-          {linkedin && (
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <LinkedinIcon />
-              <div style={{ fontSize: 20, color: "rgba(255,255,255,0.5)" }}>
-                {linkedin
-                  .replace(new RegExp(/.*\.com\//), "")
-                  .replace(/\/$/g, "")}
-              </div>
-            </div>
-          )}
-
-          {twitter && (
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <TwitterIcon />
-              <div style={{ fontSize: 20, color: "rgba(255,255,255,0.5)" }}>
-                {twitter
-                  .replace(new RegExp(/.*\.com\//), "")
-                  .replace(/\/$/g, "")}
-              </div>
-            </div>
-          )}
-          {website && (
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <LinkIcon />
-              <div style={{ fontSize: 20, color: "rgba(255,255,255,0.5)" }}>
-                {website
-                  .replace(new RegExp(/https:\/\//), "")
-                  .replace(/\/$/g, "")}
-              </div>
-            </div>
-          )}
-        </div>
+        {url}
       </div>
-    ),
+      <div
+        style={{
+          fontWeight: 800,
+          fontSize: 70,
+          fontFamily: "Inter",
+          width: 800,
+        }}
+      >
+        {name}
+      </div>
+      <div
+        style={{
+          fontSize: 30,
+          fontWeight: 300,
+          width: 800,
+        }}
+      >
+        {headline
+          .replaceAll("**", "")
+          .replaceAll("__", "")
+          .replaceAll("~~", "")
+          .replaceAll(/\[(.*)\]\(.*\)/g, "$1")}
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          bottom: "4rem",
+          left: "4rem",
+          display: "flex",
+          alignItems: "center",
+          gap: "2rem",
+        }}
+      >
+        {github && (
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <GithubIcon />
+            <div style={{ fontSize: 20, color: "rgba(255,255,255,0.5)" }}>
+              {github.replace(new RegExp(/.*\.com\//), "").replace(/\/$/, "")}
+            </div>
+          </div>
+        )}
+        {linkedin && (
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <LinkedinIcon />
+            <div style={{ fontSize: 20, color: "rgba(255,255,255,0.5)" }}>
+              {linkedin
+                .replace(new RegExp(/.*\.com\//), "")
+                .replace(/\/$/g, "")}
+            </div>
+          </div>
+        )}
+
+        {twitter && (
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <TwitterIcon />
+            <div style={{ fontSize: 20, color: "rgba(255,255,255,0.5)" }}>
+              {twitter.replace(new RegExp(/.*\.com\//), "").replace(/\/$/g, "")}
+            </div>
+          </div>
+        )}
+        {website && (
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <LinkIcon />
+            <div style={{ fontSize: 20, color: "rgba(255,255,255,0.5)" }}>
+              {website
+                .replace(new RegExp(/https:\/\//), "")
+                .replace(/\/$/g, "")}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>,
     {
       width: 1200,
       height: 630,

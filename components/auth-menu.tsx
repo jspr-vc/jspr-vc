@@ -1,10 +1,10 @@
 "use client";
-import type { GetPortfolio } from "@/queries";
 import { IconBrandTabler, IconLogout, IconUser } from "@tabler/icons-react";
-import type { User } from "next-auth";
-import { signOut } from "next-auth/react";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
+import type { User } from "next-auth";
+import { signOut } from "next-auth/react";
+import type { GetPortfolio } from "@/queries";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   DropdownMenu,
@@ -33,16 +33,19 @@ export function AuthMenu({ user }: Props) {
   };
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Avatar className="cursor-pointer">
-          <AvatarImage
-            className="m-0"
-            src={user.image ?? ""}
-            alt={user.name ?? ""}
-          />
-          <AvatarFallback>{(user.name ?? "")[0] ?? ""}</AvatarFallback>
-        </Avatar>
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger
+        nativeButton={false}
+        render={
+          <Avatar className="cursor-pointer">
+            <AvatarImage
+              className="m-0"
+              src={user.image ?? ""}
+              alt={user.name ?? ""}
+            />
+            <AvatarFallback>{(user.name ?? "")[0] ?? ""}</AvatarFallback>
+          </Avatar>
+        }
+      />
       <DropdownMenuContent className="bg-card/90" align="end">
         <DropdownMenuLabel>
           <div className="flex flex-col space-y-1">
