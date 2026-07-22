@@ -217,7 +217,7 @@ export function ExperienceForm({
                         onClientUploadComplete={(res = []) => {
                           const file = res.at(0);
                           if (file) {
-                            form.setValue("companyLogo", file.url);
+                            form.setValue("companyLogo", file.ufsUrl);
                           }
                         }}
                       />

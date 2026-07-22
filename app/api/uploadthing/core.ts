@@ -18,7 +18,7 @@ export const uploadRouter = {
         name: file.name,
         size: file.size,
         key: file.key,
-        url: file.url,
+        url: file.ufsUrl,
         ownerId: metadata.userId,
       });
     }),
