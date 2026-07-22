@@ -257,6 +257,7 @@ export function ProjectForm({ project, technologies, portfolioId }: Props) {
                         </div>
                       )}
                       <UploadDropzone
+                        className="w-full"
                         endpoint="imageUploader"
                         onClientUploadComplete={(res = []) => {
                           const file = res.at(0);

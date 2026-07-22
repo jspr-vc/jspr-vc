@@ -212,6 +212,7 @@ export function ExperienceForm({
                         </div>
                       )}
                       <UploadDropzone
+                        className="w-full"
                         endpoint="imageUploader"
                         onClientUploadComplete={(res = []) => {
                           const file = res.at(0);
