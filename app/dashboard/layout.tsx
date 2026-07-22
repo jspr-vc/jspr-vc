@@ -24,7 +24,7 @@ export default async function DashboardLayout({ children }: Props) {
         <div className="self-end">
           <AuthMenu user={session.user} />
         </div>
-        <main className="flex flex-col gap-4">
+        <main className="flex flex-col gap-6">
           <DashboardTabs isAdmin={session.user.role === "admin"} />
           {children}
         </main>

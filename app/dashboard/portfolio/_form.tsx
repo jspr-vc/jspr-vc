@@ -52,7 +52,7 @@ export function PortfolioForm({ portfolio }: PortfolioFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={submit}>
-        <div className="flex flex-col gap-4 rounded-md bg-card/30 p-8 shadow-xs border border-muted">
+        <div className="flex flex-col gap-4 rounded-md">
           <Card>
             <CardHeader>
               <CardTitle>General Info</CardTitle>
