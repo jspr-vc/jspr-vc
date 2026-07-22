@@ -33,7 +33,7 @@ export function PortfolioPage({ portfolio }: PortfolioPageProps) {
             )}
             <Markdown content={portfolio.subheading} />
 
-            <nav className="hidden lg:flex pt-8">
+            <nav className="lg:flex pt-8">
               <ul>
                 {portfolio.about && (
                   <li>
