@@ -123,6 +123,7 @@ export function TechnologyAddForm({ onSuccess }: Props) {
                       </div>
                     )}
                     <UploadDropzone
+                      className="w-full"
                       endpoint="imageUploader"
                       onClientUploadComplete={(res = []) => {
                         const file = res.at(0);

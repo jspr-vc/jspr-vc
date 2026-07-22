@@ -9,6 +9,7 @@ import {
   insertExperienceSchema,
 } from "@/lib/validators";
 import { authOptions } from "../auth-options";
+import { revalidateHomeIfDefault } from "./revalidate-home";
 
 export async function upsertExperience(formData: InsertExperienceSchema) {
   const session = await getServerSession(authOptions);
@@ -85,5 +86,6 @@ export async function upsertExperience(formData: InsertExperienceSchema) {
 
   revalidatePath("/dashboard/experiences");
   revalidatePath(`/${session.user.portfolioSlug}`);
+  await revalidateHomeIfDefault(session.user.portfolioId);
   return result;
 }

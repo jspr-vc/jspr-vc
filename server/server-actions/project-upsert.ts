@@ -10,6 +10,7 @@ import {
   insertProjectSchema,
 } from "@/lib/validators";
 import { authOptions } from "../auth-options";
+import { revalidateHomeIfDefault } from "./revalidate-home";
 
 export async function upsertProject(formData: InsertProjectSchema) {
   const session = await getServerSession(authOptions);
@@ -78,5 +79,6 @@ export async function upsertProject(formData: InsertProjectSchema) {
 
   revalidatePath("/dashboard/projects");
   revalidatePath(`/${session.user.portfolioSlug}`);
+  await revalidateHomeIfDefault(session.user.portfolioId);
   return result;
 }

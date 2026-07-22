@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { db } from "@/db/client";
 import { posts } from "@/db/schema";
 import { authOptions } from "../auth-options";
+import { revalidateHomeIfDefault } from "./revalidate-home";
 
 export async function deletePost(postId: number) {
   const session = await getServerSession(authOptions);
@@ -22,5 +23,6 @@ export async function deletePost(postId: number) {
   revalidatePath("/dashboard/posts");
   revalidatePath(`/dashboard/posts/${postId}/edit`);
   revalidatePath(`/${session.user.portfolioSlug}`);
+  await revalidateHomeIfDefault(session.user.portfolioId);
   return result;
 }
