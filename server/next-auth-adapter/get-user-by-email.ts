@@ -1,7 +1,7 @@
-import { db } from "@/db/client";
-import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import type { Adapter } from "next-auth/adapters";
+import { db } from "@/db/client";
+import { users } from "@/db/schema";
 
 export const getUserByEmail: Adapter["getUser"] = async (email) => {
   const data = await db.query.users.findFirst({
@@ -9,7 +9,7 @@ export const getUserByEmail: Adapter["getUser"] = async (email) => {
     where: eq(users.email, email),
   });
 
-  if (!data || !data.portfolio) {
+  if (!data?.portfolio) {
     return null;
   }
 

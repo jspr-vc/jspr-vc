@@ -1,13 +1,13 @@
 import type { Config } from "drizzle-kit";
 
-import "dotenv/config";
-import { env } from "./env.mjs";
+import { env } from "./env";
 
 const isStudio = Boolean(process.env.DRIZZLE_STUDIO);
 
 export default {
   schema: "./db/schema/*",
   out: "./db/drizzle",
+  dialect: "postgresql",
   dbCredentials: {
     host: env.POSTGRES_HOST,
     user: env.POSTGRES_USER,
@@ -15,5 +15,4 @@ export default {
     database: env.POSTGRES_DATABASE,
     ssl: !isStudio,
   },
-  driver: "pg",
 } satisfies Config;

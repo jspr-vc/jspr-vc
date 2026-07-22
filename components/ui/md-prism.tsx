@@ -1,13 +1,13 @@
 "use client";
+import { useTheme } from "next-themes";
+import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import {
   oneDark,
   oneLight,
 } from "react-syntax-highlighter/dist/esm/styles/prism";
-import ReactMarkdown from "react-markdown";
-import { useTheme } from "next-themes";
-import { MarkdownProps, commonMdComponents } from "./md";
 import remarkGfm from "remark-gfm";
+import { commonMdComponents, type MarkdownProps } from "./md";
 import {
   TypographyH1,
   TypographyH2,
@@ -26,18 +26,20 @@ export function MarkdownWithCode({ content, ...props }: MarkdownProps) {
         h4: ({ node, ...props }) => <TypographyH4 {...props} />,
         ...commonMdComponents,
         ...props.components,
-        code: ({ node, inline, className, children, ...props }) => {
+        code: ({ node, className, children, ref, ...props }) => {
+          // biome-ignore lint/correctness/useHookAtTopLevel: react-markdown renders this as a component, so the hook runs at a component's top level
           const { theme } = useTheme();
           const match = /language-(\w+)/.exec(className || "");
-          return !inline && match ? (
+          return match ? (
             <SyntaxHighlighter
               {...props}
-              children={String(children).replace(/\n$/, "")}
               style={theme === "light" ? oneLight : oneDark}
               className="bg-transparent"
               language={match[1]}
               PreTag="div"
-            />
+            >
+              {String(children).replace(/\n$/, "")}
+            </SyntaxHighlighter>
           ) : (
             <code {...props} className={className}>
               {children}

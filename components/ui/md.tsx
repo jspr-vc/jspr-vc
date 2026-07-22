@@ -1,4 +1,5 @@
-import ReactMarkdown, { Components } from "react-markdown";
+import type { ComponentProps } from "react";
+import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import {
   TypographyH1,
@@ -6,18 +7,21 @@ import {
   TypographyH3,
   TypographyH4,
 } from "./typography";
-import { ComponentProps } from "react";
 
 export const commonMdComponents: Components = {
   p: ({ node, ...props }) => <p className="mt-4" {...props} />,
   a: ({ node, ...props }) => <a className="text-blue-400" {...props} />,
-  li: ({ node, ordered, ...props }) => <li className="mb-2" {...props} />,
+  li: ({ node, ...props }) => <li className="mb-2" {...props} />,
   pre: ({ node, ...props }) => (
-    <pre {...props} className="!bg-card/30 border border-muted shadow" />
+    <pre {...props} className="bg-card/30! border border-muted shadow-sm" />
   ),
-  // eslint-disable-next-line @next/next/no-img-element
   img: ({ node, ...props }) => (
-    <img {...props} style={{ maxHeight: 512, ...props.style }} />
+    // biome-ignore lint/performance/noImgElement: markdown renders arbitrary external image URLs; next/image is unsuitable here
+    <img
+      {...props}
+      style={{ maxHeight: 512, ...props.style }}
+      alt={props.alt}
+    />
   ),
 };
 

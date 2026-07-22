@@ -1,18 +1,21 @@
 "use client";
 import "@uploadthing/react/styles.css";
-import { insertExperienceSchema } from "@/lib/validators";
-import type { GetExp, GetAllTech } from "@/queries";
-import {
-  type InsertTechnology,
-  upsertExperience,
-} from "@/server/server-actions";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  IconCalendar,
+  IconDeviceFloppy,
+  IconLoader2,
+  IconTrash,
+  IconX,
+} from "@tabler/icons-react";
+import { format } from "date-fns";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { TypographyH4 } from "@/components/ui/typography";
 import { TechnologyAdd } from "@/components/add-tech-button";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -21,26 +24,22 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useTransition } from "react";
-import {
-  IconCalendar,
-  IconDeviceFloppy,
-  IconLoader2,
-  IconTrash,
-  IconX,
-} from "@tabler/icons-react";
-import { Badge } from "@/components/ui/badge";
-import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { format } from "date-fns";
+import { Textarea } from "@/components/ui/textarea";
+import { TypographyH4 } from "@/components/ui/typography";
+import { UploadDropzone } from "@/lib/uploadthing";
 import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import { UploadDropzone } from "@uploadthing/react";
-import type { UploadRouter } from "@/app/api/uploadthing/core";
+import { insertExperienceSchema } from "@/lib/validators";
+import type { GetAllTech, GetExp } from "@/queries";
+import {
+  type InsertTechnology,
+  upsertExperience,
+} from "@/server/server-actions";
 
 interface Props {
   experience?: GetExp;
@@ -146,7 +145,11 @@ export function ExperienceForm({
                 <FormItem>
                   <FormLabel>Company Website</FormLabel>
                   <FormControl>
-                    <Input placeholder="ttlstore.com..." {...field} />
+                    <Input
+                      placeholder="ttlstore.com..."
+                      {...field}
+                      value={field.value ?? ""}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -208,12 +211,13 @@ export function ExperienceForm({
                           />
                         </div>
                       )}
-                      <UploadDropzone<UploadRouter>
+                      <UploadDropzone
+                        className="w-full"
                         endpoint="imageUploader"
                         onClientUploadComplete={(res = []) => {
                           const file = res.at(0);
                           if (file) {
-                            form.setValue("companyLogo", file.fileUrl);
+                            form.setValue("companyLogo", file.url);
                           }
                         }}
                       />
@@ -232,8 +236,8 @@ export function ExperienceForm({
                   <FormItem className="flex flex-col">
                     <FormLabel>Start Date</FormLabel>
                     <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
+                      <PopoverTrigger
+                        render={
                           <Button
                             variant={"outline"}
                             className={cn(
@@ -247,8 +251,8 @@ export function ExperienceForm({
                             )}
                             <IconCalendar className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
-                        </FormControl>
-                      </PopoverTrigger>
+                        }
+                      />
                       <PopoverContent className="w-auto p-0" align="start">
                         <Calendar
                           mode="single"
@@ -256,7 +260,7 @@ export function ExperienceForm({
                           onSelect={(date) =>
                             field.onChange(date || form.getValues("startedAt"))
                           }
-                          initialFocus
+                          autoFocus
                         />
                       </PopoverContent>
                     </Popover>
@@ -272,8 +276,8 @@ export function ExperienceForm({
                   <FormItem className="flex flex-col">
                     <FormLabel>End Date</FormLabel>
                     <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
+                      <PopoverTrigger
+                        render={
                           <Button
                             variant={"outline"}
                             className={cn(
@@ -287,15 +291,15 @@ export function ExperienceForm({
                             )}
                             <IconCalendar className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
-                        </FormControl>
-                      </PopoverTrigger>
+                        }
+                      />
                       <PopoverContent className="w-auto p-0" align="start">
                         <Calendar
                           mode="single"
                           selected={field.value ?? undefined}
                           onSelect={(date) => field.onChange(date)}
                           disabled={(date) => date < new Date("1900-01-01")}
-                          initialFocus
+                          autoFocus
                         />
                       </PopoverContent>
                     </Popover>

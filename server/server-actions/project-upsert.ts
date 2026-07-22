@@ -1,15 +1,16 @@
 "use server";
-import {
-  insertProjectSchema,
-  type InsertProjectSchema,
-} from "@/lib/validators";
-import { projects } from "@/db/schema";
-import { db } from "@/db/client";
 import { eq } from "drizzle-orm";
-import { projectTech } from "@/db/schema/project-technologies";
-import { revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
+import { db } from "@/db/client";
+import { projects } from "@/db/schema";
+import { projectTech } from "@/db/schema/project-technologies";
+import {
+  type InsertProjectSchema,
+  insertProjectSchema,
+} from "@/lib/validators";
 import { authOptions } from "../auth-options";
+import { revalidateHomeIfDefault } from "./revalidate-home";
 
 export async function upsertProject(formData: InsertProjectSchema) {
   const session = await getServerSession(authOptions);
@@ -18,9 +19,7 @@ export async function upsertProject(formData: InsertProjectSchema) {
     throw new Error("Unauthenticated");
   }
 
-  const { stack, ...projectData } = await insertProjectSchema.parseAsync(
-    formData,
-  );
+  const { stack, ...projectData } = insertProjectSchema.parse(formData);
 
   const isSameAsSession = projectData.portfolioId === session.user.portfolioId;
   const isAdmin = session.user.role === "admin";
@@ -78,7 +77,8 @@ export async function upsertProject(formData: InsertProjectSchema) {
     });
   });
 
-  revalidateTag(`/dashboard/projects`);
-  revalidateTag(`/${session.user.portfolioSlug}`);
+  revalidatePath("/dashboard/projects");
+  revalidatePath(`/${session.user.portfolioSlug}`);
+  await revalidateHomeIfDefault(session.user.portfolioId);
   return result;
 }

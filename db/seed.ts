@@ -1,8 +1,5 @@
-import { eq } from "drizzle-orm";
 import { db } from "./client";
-import { NewTechnologies, technologies } from "./schema";
-import dotenv from "dotenv";
-dotenv.config({ path: ".env" });
+import { type NewTechnologies, technologies } from "./schema";
 
 /**
  * Seed the database with initial data

@@ -30,4 +30,4 @@ function TextareaSkeleton({ className }: React.HTMLAttributes<HTMLDivElement>) {
   );
 }
 
-export { Skeleton, InputSkeleton, TextareaSkeleton };
+export { InputSkeleton, Skeleton, TextareaSkeleton };

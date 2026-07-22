@@ -1,4 +1,16 @@
 "use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  IconDeviceFloppy,
+  IconGitPullRequestDraft,
+  IconLoader2,
+  IconSend,
+} from "@tabler/icons-react";
+import { format } from "date-fns";
+import NextLink from "next/link";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,18 +29,6 @@ import { insertPostSchema } from "@/lib/validators";
 import type { GetPost } from "@/queries";
 import { upsertPost } from "@/server/server-actions";
 import { setPostStatus } from "@/server/server-actions/post-actions";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  IconDeviceFloppy,
-  IconGitPullRequestDraft,
-  IconLoader2,
-  IconSend,
-} from "@tabler/icons-react";
-import { format } from "date-fns/esm";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { useForm } from "react-hook-form";
-import NextLink from "next/link";
 
 interface Props {
   post?: GetPost;
@@ -144,7 +144,7 @@ export function PostForm({ post, portfolioId }: Props) {
                 <FormItem>
                   <FormLabel>Excerpt</FormLabel>
                   <FormControl>
-                    <Textarea {...field} />
+                    <Textarea {...field} value={field.value ?? ""} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

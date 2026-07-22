@@ -1,5 +1,4 @@
 import { type InferModel, relations } from "drizzle-orm";
-import { portfolios } from "./portfolio";
 import {
   integer,
   pgEnum,
@@ -7,6 +6,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
+import { portfolios } from "./portfolio";
 import { uploads } from "./upload";
 
 // --- Next Auth Table ---

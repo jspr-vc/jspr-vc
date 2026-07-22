@@ -1,4 +1,4 @@
-import { Adapter } from "next-auth/adapters";
+import type { Adapter } from "next-auth/adapters";
 import { db } from "@/db/client";
 import { verificationTokens } from "@/db/schema";
 

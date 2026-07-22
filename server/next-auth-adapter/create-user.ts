@@ -1,10 +1,12 @@
+import { randomUUID } from "node:crypto";
+import { eq } from "drizzle-orm";
 import type { Adapter, AdapterUser } from "next-auth/adapters";
 import { db } from "@/db/client";
-import { randomUUID } from "node:crypto";
 import { portfolios, users } from "@/db/schema";
-import { eq } from "drizzle-orm";
 
-export const createUser: Adapter["createUser"] = async (payload) => {
+export const createUser: NonNullable<Adapter["createUser"]> = async (
+  payload: Omit<AdapterUser, "id">,
+) => {
   return await db.transaction(async (tx) => {
     const id = randomUUID();
     await tx.insert(users).values({ ...payload, id });

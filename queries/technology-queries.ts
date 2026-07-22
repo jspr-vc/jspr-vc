@@ -1,7 +1,7 @@
-import { db } from "@/db/client";
-import { technologies } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { cache } from "react";
+import { db } from "@/db/client";
+import { technologies } from "@/db/schema";
 
 /* -------------------------------------------------------------------------------------------------
  * Queries

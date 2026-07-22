@@ -1,8 +1,8 @@
 "use client";
 
+import { IconMoonFilled, IconSunFilled } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
-import { IconMoonFilled, IconSunFilled } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 
 interface Props {

@@ -1,14 +1,15 @@
 "use server";
-import {
-  insertExperienceSchema,
-  type InsertExperienceSchema,
-} from "@/lib/validators";
-import { experiences, experienceTech } from "@/db/schema";
-import { db } from "@/db/client";
 import { eq } from "drizzle-orm";
-import { revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
+import { db } from "@/db/client";
+import { experiences, experienceTech } from "@/db/schema";
+import {
+  type InsertExperienceSchema,
+  insertExperienceSchema,
+} from "@/lib/validators";
 import { authOptions } from "../auth-options";
+import { revalidateHomeIfDefault } from "./revalidate-home";
 
 export async function upsertExperience(formData: InsertExperienceSchema) {
   const session = await getServerSession(authOptions);
@@ -83,7 +84,8 @@ export async function upsertExperience(formData: InsertExperienceSchema) {
     });
   });
 
-  revalidateTag(`/dashboard/experiences`);
-  revalidateTag(`/${session.user.portfolioSlug}`);
+  revalidatePath("/dashboard/experiences");
+  revalidatePath(`/${session.user.portfolioSlug}`);
+  await revalidateHomeIfDefault(session.user.portfolioId);
   return result;
 }

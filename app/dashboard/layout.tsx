@@ -1,9 +1,9 @@
-import { ReactNode } from "react";
-import { AuthMenu } from "@/components/auth-menu";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/server/auth-options";
 import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import type { ReactNode } from "react";
+import { AuthMenu } from "@/components/auth-menu";
 import { preloadGetPortfolio } from "@/queries";
+import { authOptions } from "@/server/auth-options";
 import DashboardTabs from "./_tabs";
 
 interface Props {
@@ -24,7 +24,7 @@ export default async function DashboardLayout({ children }: Props) {
         <div className="self-end">
           <AuthMenu user={session.user} />
         </div>
-        <main className="flex flex-col gap-4">
+        <main className="flex flex-col gap-6">
           <DashboardTabs isAdmin={session.user.role === "admin"} />
           {children}
         </main>

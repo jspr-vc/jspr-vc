@@ -1,7 +1,7 @@
-import { db } from "@/db/client";
-import { projects } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { cache } from "react";
+import { db } from "@/db/client";
+import { projects } from "@/db/schema";
 
 /* -------------------------------------------------------------------------------------------------
  * Queries

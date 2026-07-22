@@ -1,5 +1,5 @@
+import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
-import { HTMLAttributes, forwardRef } from "react";
 
 export const TypographyH1 = forwardRef<
   HTMLHeadingElement,
@@ -72,7 +72,7 @@ export const TypographyP = forwardRef<
   return (
     <p
       className={cn("leading-7", className)}
-      // className={cn("leading-7 [&:not(:first-child)]:mt-6", className)}
+      // className={cn("leading-7 not-first:mt-6", className)}
       ref={ref}
       {...props}
     />

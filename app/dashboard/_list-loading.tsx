@@ -1,3 +1,4 @@
+import type { ComponentProps } from "react";
 import {
   Card,
   CardContent,
@@ -6,7 +7,6 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { ComponentProps } from "react";
 
 export default function Loading({
   className,
@@ -18,23 +18,25 @@ export default function Loading({
       {...props}
     >
       {new Array(3).fill(0).map((_, i) => (
-        <Card className="min-h-[200px]">
+        // biome-ignore lint/suspicious/noArrayIndexKey: static placeholder skeletons with no stable id
+        <Card className="min-h-[200px]" key={i}>
           <CardHeader>
-            <Skeleton key={i} className="h-6 w-40" />
+            <Skeleton className="h-6 w-40" />
           </CardHeader>
           <CardContent>
             <div className="flex flex-col gap-4">
-              <Skeleton key={i} className="w-full h-16" />
+              <Skeleton className="w-full h-16" />
 
               <div className="flex gap-2 items-center flex-wrap">
                 {new Array(6).fill(0).map((_, i) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: static placeholder skeletons with no stable id
                   <Skeleton key={i} className="w-16 h-4" />
                 ))}
               </div>
             </div>
           </CardContent>
           <CardFooter>
-            <Skeleton key={i} className="w-20 h-6" />
+            <Skeleton className="w-20 h-6" />
           </CardFooter>
         </Card>
       ))}

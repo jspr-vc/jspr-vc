@@ -1,10 +1,10 @@
+import { type ComponentProps, forwardRef } from "react";
 import { cn } from "@/lib/utils";
-import { ComponentProps, forwardRef } from "react";
 
 export const Timeline = forwardRef<HTMLUListElement, ComponentProps<"ul">>(
   function Timeline({ className, ...props }, ref) {
     return (
-      <ul ref={ref} {...props} className={cn("flex flex-col", className)}></ul>
+      <ul ref={ref} {...props} className={cn("flex flex-col", className)} />
     );
   },
 );
@@ -24,10 +24,10 @@ export const TimelineSeparator = forwardRef<
       ref={ref}
       {...props}
       className={cn(
-        "flex-shrink-1 flex-grow-0 basis-0 flex flex-col items-center",
+        "shrink grow-0 basis-0 flex flex-col items-center",
         className,
       )}
-    ></div>
+    />
   );
 });
 
@@ -55,7 +55,7 @@ export const TimelineConnector = forwardRef<
       ref={ref}
       {...props}
       className={cn(
-        "flex flex-grow box-border bg-muted-foreground w-0.5",
+        "flex grow box-border bg-muted-foreground w-0.5",
         className,
       )}
     />
@@ -69,10 +69,7 @@ export const TimelineContent = forwardRef<
   return (
     <div
       ref={ref}
-      className={cn(
-        "basis-0 flex-grow flex-shrink box-border px-4 pb-4",
-        className,
-      )}
+      className={cn("basis-0 grow shrink box-border px-4 pb-4", className)}
       {...props}
     />
   );

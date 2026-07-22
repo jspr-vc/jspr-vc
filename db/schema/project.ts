@@ -1,6 +1,4 @@
-import { portfolios } from "./portfolio";
 import { type InferModel, relations } from "drizzle-orm";
-import { projectTech } from "./project-technologies";
 import {
   date,
   integer,
@@ -10,6 +8,8 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
+import { portfolios } from "./portfolio";
+import { projectTech } from "./project-technologies";
 
 export const projects = pgTable("projects", {
   id: serial("id").primaryKey().notNull(),

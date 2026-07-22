@@ -1,7 +1,7 @@
+import { and, eq } from "drizzle-orm";
+import type { Adapter } from "next-auth/adapters";
 import { db } from "@/db/client";
 import { verificationTokens } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
-import { Adapter } from "next-auth/adapters";
 
 export const useVerificationToken: Adapter["useVerificationToken"] = async (
   token,
@@ -29,7 +29,7 @@ export const useVerificationToken: Adapter["useVerificationToken"] = async (
       );
 
     return deletedToken;
-  } catch (err) {
+  } catch (_err) {
     throw new Error("No verification token found.");
   }
 };

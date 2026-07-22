@@ -1,5 +1,21 @@
 import { IconCheck, IconCirclePlus } from "@tabler/icons-react";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import type { GetAllTech } from "@/queries";
+import type { InsertTechnology } from "@/server/server-actions";
+import { TechnologyAddForm } from "./add-tech-form";
 import { Button } from "./ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from "./ui/command";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import {
   Tooltip,
   TooltipContent,
@@ -7,22 +23,6 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 import { TypographyP } from "./ui/typography";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import {
-  Command,
-  CommandGroup,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from "./ui/command";
-import type { GetAllTech } from "@/queries";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
-import { TechnologyAddForm } from "./add-tech-form";
-import type { InsertTechnology } from "@/server/server-actions";
 
 interface Props {
   technologies: GetAllTech;
@@ -41,22 +41,27 @@ export function TechnologyAdd({ technologies, selectedMap, onSelect }: Props) {
   return (
     <>
       <Popover>
-        <PopoverTrigger asChild>
-          <div>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button size="icon" variant="ghost" className="h-9 w-9">
-                    <IconCirclePlus className="h-7 w-7" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <TypographyP>Add new tech stack</TypographyP>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        </PopoverTrigger>
+        <PopoverTrigger
+          nativeButton={false}
+          render={
+            <div>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button size="icon" variant="ghost" className="h-9 w-9">
+                        <IconCirclePlus className="h-7 w-7" />
+                      </Button>
+                    }
+                  />
+                  <TooltipContent>
+                    <TypographyP>Add new tech stack</TypographyP>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          }
+        />
         {/* Dialog takes over scroll listener,
          *  which makes this popover not scrollable when on dialog box.
          *  Tho, search and click & drag still works

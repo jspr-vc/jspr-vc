@@ -1,27 +1,31 @@
-import { getServerSession } from "next-auth";
-import { ProjectForm } from "../../_form";
-import { authOptions } from "@/server/auth-options";
-import { notFound, redirect } from "next/navigation";
-import { getAllTech, getProject } from "@/queries";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LinkButton } from "@/components/ui/button";
 import { IconArrowLeft } from "@tabler/icons-react";
+import { notFound, redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { LinkButton } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getAllTech, getProject } from "@/queries";
+import { authOptions } from "@/server/auth-options";
+import { ProjectForm } from "../../_form";
 import ProjectEditDangerZone from "./_danger_zone";
 
 interface Props {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default async function ProjectEditPage({ params: { id } }: Props) {
+export default async function ProjectEditPage(props: Props) {
+  const params = await props.params;
+
+  const { id } = params;
+
   const session = await getServerSession(authOptions);
   if (!session?.user) {
     redirect("/sign-in");
   }
 
   const techPromise = getAllTech();
-  const projectPromise = getProject(parseInt(id));
+  const projectPromise = getProject(Number.parseInt(id, 10));
   const portfolioId = session.user.portfolioId;
 
   const [technologies, project] = await Promise.all([

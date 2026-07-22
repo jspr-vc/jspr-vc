@@ -1,3 +1,9 @@
+import { IconCirclePlus } from "@tabler/icons-react";
+import { format } from "date-fns";
+import NextLink from "next/link";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth/next";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -7,14 +13,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { TypographyH3 } from "@/components/ui/typography";
-import { authOptions } from "@/server/auth-options";
 import { getExpsByPortfolioId } from "@/queries";
-import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
-import NextLink from "next/link";
-import { IconCirclePlus } from "@tabler/icons-react";
-import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns/esm";
+import { authOptions } from "@/server/auth-options";
 
 export default async function ExperienceDashboard() {
   const session = await getServerSession(authOptions);
@@ -39,8 +39,8 @@ export default async function ExperienceDashboard() {
             <CardContent className="flex-1">
               <div className="flex flex-col gap-2">
                 <div className="flex flex-row gap-2 flex-wrap items-center">
-                  {experience.stack.map((tech, i) => (
-                    <Badge variant="secondary" key={i}>
+                  {experience.stack.map((tech) => (
+                    <Badge variant="secondary" key={tech.techId}>
                       {tech.tech.name}
                     </Badge>
                   ))}

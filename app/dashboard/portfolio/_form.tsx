@@ -1,14 +1,10 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import type { GetPortfolio } from "@/queries";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updatePortfolio } from "@/server/server-actions";
-import { updatePortfolioSchema } from "@/lib/validators";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { IconDeviceFloppy, IconLoader2 } from "@tabler/icons-react";
+import { useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -17,7 +13,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useTransition } from "react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { updatePortfolioSchema } from "@/lib/validators";
+import type { GetPortfolio } from "@/queries";
+import { updatePortfolio } from "@/server/server-actions";
 
 export interface PortfolioFormProps {
   portfolio: NonNullable<GetPortfolio>;
@@ -52,7 +52,7 @@ export function PortfolioForm({ portfolio }: PortfolioFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={submit}>
-        <div className="flex flex-col gap-4 rounded-md bg-card/30 p-8 shadow-sm border border-muted">
+        <div className="flex flex-col gap-4 rounded-md">
           <Card>
             <CardHeader>
               <CardTitle>General Info</CardTitle>
@@ -93,7 +93,7 @@ export function PortfolioForm({ portfolio }: PortfolioFormProps) {
                     <FormItem>
                       <FormLabel>Public Email</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} value={field.value ?? ""} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

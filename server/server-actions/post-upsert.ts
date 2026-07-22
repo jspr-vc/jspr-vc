@@ -1,10 +1,11 @@
 "use server";
-import { type InsertPostSchema, insertPostSchema } from "@/lib/validators";
+import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth-options";
 import { db } from "@/db/client";
 import { posts } from "@/db/schema";
-import { revalidateTag } from "next/cache";
+import { type InsertPostSchema, insertPostSchema } from "@/lib/validators";
+import { authOptions } from "../auth-options";
+import { revalidateHomeIfDefault } from "./revalidate-home";
 
 export async function upsertPost(formData: InsertPostSchema) {
   const session = await getServerSession(authOptions);
@@ -37,9 +38,10 @@ export async function upsertPost(formData: InsertPostSchema) {
     throw new Error("Upsert failed");
   }
 
-  revalidateTag(`/dashboard/posts`);
-  revalidateTag(`/dashboard/posts/${result.id}/edit`);
-  revalidateTag(`/posts/${result.slug}`);
-  revalidateTag(`/${session.user.portfolioSlug}`);
+  revalidatePath("/dashboard/posts");
+  revalidatePath(`/dashboard/posts/${result.id}/edit`);
+  revalidatePath(`/posts/${result.slug}`);
+  revalidatePath(`/${session.user.portfolioSlug}`);
+  await revalidateHomeIfDefault(session.user.portfolioId);
   return result;
 }
