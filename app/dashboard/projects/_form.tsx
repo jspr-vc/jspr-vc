@@ -262,7 +262,7 @@ export function ProjectForm({ project, technologies, portfolioId }: Props) {
                         onClientUploadComplete={(res = []) => {
                           const file = res.at(0);
                           if (file) {
-                            projectForm.setValue("thumbnail", file.url);
+                            projectForm.setValue("thumbnail", file.ufsUrl);
                           }
                         }}
                       />

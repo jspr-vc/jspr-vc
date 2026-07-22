@@ -15,10 +15,12 @@ const nextConfig: NextConfig = {
     // the OG image endpoints are served over http as well as https.
     remotePatterns: [
       { protocol: "https", hostname: "uploadthing.com", pathname: "/**" },
-      { protocol: "https", hostname: "manok.dev", pathname: "/**" },
-      { protocol: "http", hostname: "manok.dev", pathname: "/**" },
-      { protocol: "https", hostname: "beta.manok.dev", pathname: "/**" },
-      { protocol: "http", hostname: "beta.manok.dev", pathname: "/**" },
+      { protocol: "https", hostname: "utfs.io", pathname: "/**" },
+      { protocol: "https", hostname: "*.ufs.sh", pathname: "/**" },
+      { protocol: "https", hostname: "jspr.vc", pathname: "/**" },
+      { protocol: "http", hostname: "jspr.vc", pathname: "/**" },
+      { protocol: "https", hostname: "beta.jspr.vc", pathname: "/**" },
+      { protocol: "http", hostname: "beta.jspr.vc", pathname: "/**" },
     ],
   },
 };
