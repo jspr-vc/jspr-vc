@@ -7,6 +7,7 @@ import { db } from "@/db/client";
 import { type Post, posts } from "@/db/schema";
 import { type InsertPostSchema, insertPostSchema } from "@/lib/validators";
 import { authOptions } from "../auth-options";
+import { revalidateHomeIfDefault } from "./revalidate-home";
 
 export async function setPostStatus(
   formData: InsertPostSchema,
@@ -40,6 +41,7 @@ export async function setPostStatus(
   revalidatePath(`/dashboard/posts/${post.id}/edit`);
   revalidatePath(`/posts/${result.slug}`);
   revalidatePath(`/${session.user.portfolioSlug}`);
+  await revalidateHomeIfDefault(session.user.portfolioId);
 
   return result;
 }

@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { db } from "@/db/client";
 import { experiences } from "@/db/schema";
 import { authOptions } from "../auth-options";
+import { revalidateHomeIfDefault } from "./revalidate-home";
 
 export async function deleteExperience(experienceId: number) {
   const session = await getServerSession(authOptions);
@@ -25,5 +26,6 @@ export async function deleteExperience(experienceId: number) {
   revalidatePath("/dashboard/experiences");
   revalidatePath(`/dashboard/experiences/${experienceId}/edit`);
   revalidatePath(`/${session.user.portfolioSlug}`);
+  await revalidateHomeIfDefault(session.user.portfolioId);
   return result;
 }
