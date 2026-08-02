@@ -24,4 +24,5 @@ type PostParams = {
 };
 
 export const portfolioOgParams: OgParams<PortfolioParams> = ogParams;
+export const linkedinBannerOgParams: OgParams<PortfolioParams> = ogParams;
 export const postOgParams: OgParams<PostParams> = ogParams;
