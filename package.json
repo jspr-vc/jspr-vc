@@ -64,7 +64,7 @@
     "husky": "9.1.7",
     "lefthook": "2.1.10",
     "pg": "8.22.0",
-    "postcss": "8.5.20",
+    "postcss": "8.5.23",
     "tailwindcss": "4.3.3",
     "typescript": "7.0.2"
   },
