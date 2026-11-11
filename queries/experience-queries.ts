@@ -1,49 +1,34 @@
 import { eq } from "drizzle-orm";
-import { cache } from "react";
+import { cacheLife, cacheTag } from "next/cache";
 import { db } from "@/db/client";
 import { experiences } from "@/db/schema";
+import { CacheTag } from "./tags";
 
 /* -------------------------------------------------------------------------------------------------
  * Queries
  * -----------------------------------------------------------------------------------------------*/
 
-export const getExp = cache(async (id: number) => {
-  const portfolio = await db.query.experiences.findFirst({
-    with: {
-      stack: {
-        with: {
-          tech: true,
-        },
-      },
-    },
+export async function getExp(id: number) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CacheTag.Experience(id));
+
+  return await db.query.experiences.findFirst({
+    with: { stack: { with: { tech: true } } },
     where: eq(experiences.id, id),
   });
-  return portfolio;
-});
+}
 
 export async function getExpsByPortfolioId(portfolioId: number) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CacheTag.Portfolio(portfolioId));
+
   return await db.query.experiences.findMany({
-    with: {
-      stack: {
-        with: {
-          tech: true,
-        },
-      },
-    },
+    with: { stack: { with: { tech: true } } },
     where: (experiences) => eq(experiences.portfolioId, portfolioId),
+    orderBy: (experiences, { desc }) => desc(experiences.startedAt),
   });
-}
-
-/* -------------------------------------------------------------------------------------------------
- * Preloads
- * -----------------------------------------------------------------------------------------------*/
-
-export function preloadGetExp(id: number) {
-  void getExp(id);
-}
-
-export function preloadExpsByPortfolioId(portfolioId: number) {
-  void getExpsByPortfolioId(portfolioId);
 }
 
 /* -------------------------------------------------------------------------------------------------

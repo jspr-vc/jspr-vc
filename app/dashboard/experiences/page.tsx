@@ -1,70 +1,38 @@
-import { IconCirclePlus } from "@tabler/icons-react";
-import { format } from "date-fns";
-import NextLink from "next/link";
-import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth/next";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { TypographyH3 } from "@/components/ui/typography";
+import { formatMonth } from "@/lib/format";
 import { getExpsByPortfolioId } from "@/queries";
-import { authOptions } from "@/server/auth-options";
+import { getCurrentUser } from "@/server/session";
+import { PageHeader } from "../_page-header";
+import { AddButton, EmptyList, Row, RowList, TagLine } from "../_row";
 
 export default async function ExperienceDashboard() {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    redirect("/sign-in");
-  }
-
-  const experiences = await getExpsByPortfolioId(session.user.portfolioId);
+  const user = await getCurrentUser();
+  const experiences = await getExpsByPortfolioId(user.portfolioId);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      {experiences.map((experience) => (
-        <NextLink
-          key={experience.id}
-          href={`/dashboard/experiences/${experience.id}/edit`}
-        >
-          <Card className="min-h-[200px] flex flex-col h-full cursor-pointer border border-muted hover:border-muted-foreground/30 transition">
-            <CardHeader>
-              <CardTitle>{experience.companyName}</CardTitle>
-              <CardDescription>{experience.jobTitle}</CardDescription>
-            </CardHeader>
-            <CardContent className="flex-1">
-              <div className="flex flex-col gap-2">
-                <div className="flex flex-row gap-2 flex-wrap items-center">
-                  {experience.stack.map((tech) => (
-                    <Badge variant="secondary" key={tech.techId}>
-                      {tech.tech.name}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter>
-              {format(experience.startedAt, "MMMM yyyy")} —{" "}
-              {experience.endedAt
-                ? format(experience.endedAt, "MMMM yyyy")
-                : "Present"}
-            </CardFooter>
-          </Card>
-        </NextLink>
-      ))}
-
-      <NextLink href="/dashboard/experiences/add">
-        <Card className="min-h-[200px] h-full flex items-center justify-center border border-muted hover:border-muted-foreground/30 transition">
-          <div className="flex items-center gap-2">
-            <IconCirclePlus className="w-8 h-8" />
-            <TypographyH3 className="inline">Add Experience</TypographyH3>
-          </div>
-        </Card>
-      </NextLink>
-    </div>
+    <>
+      <PageHeader title="Experience">
+        <AddButton href="/dashboard/experiences/add" label="Add experience" />
+      </PageHeader>
+      {experiences.length === 0 ? (
+        <EmptyList>
+          No experience yet. Add the first job you want to show.
+        </EmptyList>
+      ) : (
+        <RowList>
+          {experiences.map((experience) => (
+            <Row
+              key={experience.id}
+              href={`/dashboard/experiences/${experience.id}/edit`}
+              meta={`${formatMonth(experience.startedAt)} → ${
+                experience.endedAt ? formatMonth(experience.endedAt) : "now"
+              }`}
+              title={`${experience.jobTitle}, ${experience.companyName}`}
+            >
+              <TagLine tags={experience.stack.map((item) => item.tech.name)} />
+            </Row>
+          ))}
+        </RowList>
+      )}
+    </>
   );
 }

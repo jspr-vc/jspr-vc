@@ -23,7 +23,8 @@ export const env = createEnv({
     NEXTAUTH_URL: z.string(),
     NEXTAUTH_SECRET: z.string(),
 
-    UPLOADTHING_TOKEN: z.string(),
+    // Read by @vercel/blob. Not needed on Vercel when the store uses OIDC.
+    BLOB_READ_WRITE_TOKEN: z.string().optional(),
 
     DEFAULT_PORTFOLIO_ID: z.coerce.number().int().optional(),
   },
@@ -43,7 +44,7 @@ export const env = createEnv({
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
 
-    UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
+    BLOB_READ_WRITE_TOKEN: process.env.BLOB_READ_WRITE_TOKEN,
 
     DEFAULT_PORTFOLIO_ID: process.env.DEFAULT_PORTFOLIO_ID,
   },

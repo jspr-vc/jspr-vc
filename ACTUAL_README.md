@@ -9,7 +9,7 @@ I chose the latest in tech (as of July 2023) as the stack for this project prima
 
 - [NextJS](https://nextjs.org) / React
 - [TailwindCSS](https://tailwindcss.com/)
-- [shadcn/ui](https://ui.shadcn.com) which uses [Radix Primitives](https://www.radix-ui.com/)
+- [shadcn/ui](https://ui.shadcn.com) on [Base UI](https://base-ui.com)
 - [tabler-icons](https://tabler.io/docs/icons/react)
 - [react-markdown](https://github.com/remarkjs/react-markdown)
 
@@ -21,13 +21,12 @@ I chose the latest in tech (as of July 2023) as the stack for this project prima
 ### Tools
 
 - [NextAuth](https://next-auth.js.org/) also known as AuthJS
-- [Upload Thing](https://uploadthing.com/)
+- [Vercel Blob](https://vercel.com/docs/vercel-blob)
 - [Drizzle ORM/Kit](https://orm.drizzle.team/)
 - [Zod](https://github.com/colinhacks/zod)
 - [React Hook Form](https://www.react-hook-form.com/)
 - [date-fns](https://date-fns.org/)
-- [Prettier](https://prettier.io/)
-- [Eslint](https://eslint.org/)
+- [Biome](https://biomejs.dev/)
 - Github Actions
 - Docker
 

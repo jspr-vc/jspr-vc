@@ -1,10 +1,8 @@
 "use client";
-import { IconBrandTabler, IconLogout, IconUser } from "@tabler/icons-react";
+import { IconExternalLink, IconLogout } from "@tabler/icons-react";
 import NextLink from "next/link";
-import { useRouter } from "next/navigation";
 import type { User } from "next-auth";
 import { signOut } from "next-auth/react";
-import type { GetPortfolio } from "@/queries";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   DropdownMenu,
@@ -21,57 +19,34 @@ interface Props {
 }
 
 export function AuthMenu({ user }: Props) {
-  const router = useRouter();
-  const navigateToPortfolio = async () => {
-    try {
-      const result = await fetch(`/api/profile/${user.id}`);
-      const newPortfolio: GetPortfolio = await result.json();
-      router.push(`/${newPortfolio.slug}`);
-    } catch (e) {
-      console.error(e);
-    }
-  };
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger
-        nativeButton={false}
-        render={
-          <Avatar className="cursor-pointer">
-            <AvatarImage
-              className="m-0"
-              src={user.image ?? ""}
-              alt={user.name ?? ""}
-            />
-            <AvatarFallback>{(user.name ?? "")[0] ?? ""}</AvatarFallback>
-          </Avatar>
-        }
-      />
-      <DropdownMenuContent className="bg-card/90" align="end">
-        <DropdownMenuLabel>
-          <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none text-foreground">
+      <DropdownMenuTrigger aria-label="Account menu" className="rounded-full">
+        <Avatar>
+          <AvatarImage src={user.image ?? ""} alt="" />
+          <AvatarFallback>{(user.name ?? "")[0] ?? ""}</AvatarFallback>
+        </Avatar>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="min-w-52">
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>
+            <span className="block font-medium text-foreground text-sm">
               {user.name}
-            </p>
-            <p className="text-xs leading-none text-muted-foreground">
-              {user.email}
-            </p>
-          </div>
-        </DropdownMenuLabel>
+            </span>
+            <span className="block">{user.email}</span>
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={navigateToPortfolio}>
-            <IconUser className="mr-2 h-4 w-4" />
-            <span>Portfolio Page</span>
+          <DropdownMenuItem
+            render={<NextLink href={`/${user.portfolioSlug}`} />}
+          >
+            <IconExternalLink />
+            View portfolio
           </DropdownMenuItem>
-          <NextLink href="/dashboard">
-            <DropdownMenuItem>
-              <IconBrandTabler className="mr-2 h-4 w-4" />
-              <span>Dashboard</span>
-            </DropdownMenuItem>
-          </NextLink>
-          <DropdownMenuItem onClick={() => signOut()}>
-            <IconLogout className="mr-2 h-4 w-4" />
-            <span>Logout</span>
+          <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>
+            <IconLogout />
+            Sign out
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

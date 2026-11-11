@@ -1,72 +1,35 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { env } from "@/env";
-import { portfolioOgParams } from "@/lib/og-params";
-import { sanitizeMarkdown } from "@/lib/sanitize-md";
-import { getPortfolios, getPortfolioWithRelations } from "@/queries";
+import { portfolioMetadata } from "@/lib/portfolio-metadata";
+import { getPortfolioSlugs, getPortfolioWithRelations } from "@/queries";
 import { PortfolioPage } from "../_portfolio";
 
-export const revalidate = 30;
+// The whole route is prerendered. Nothing here may render per request.
+export const ensureStatic = "navigation";
 
 type Props = {
   params: Promise<{ "portfolio-slug": string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
+// Cache Components needs at least one param to prerender. The placeholder
+// renders the 404 page when the database has no portfolios yet.
 export async function generateStaticParams() {
-  const portfolios = await getPortfolios();
+  const portfolios = await getPortfolioSlugs();
+  const slugs = portfolios.map((portfolio) => portfolio.slug);
 
-  return portfolios.map((portfolio) => {
-    return {
-      "portfolio-slug": portfolio.slug,
-    };
-  });
+  return (slugs.length > 0 ? slugs : ["-"]).map((slug) => ({
+    "portfolio-slug": slug,
+  }));
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
-  const params = await props.params;
-
-  const { "portfolio-slug": portfolioSlug = "" } = params;
-
-  const portfolio = await getPortfolioWithRelations(portfolioSlug);
-  const title = `${portfolio?.name || "Portfolio"} — Portfolio`;
-  const description =
-    sanitizeMarkdown(portfolio?.headline) || "A full-stack portfolio website";
-
-  const url = `${env.NEXT_PUBLIC_URL}/og/portfolio?${portfolioOgParams({
-    name: portfolio?.name || "",
-    url: env.NEXT_PUBLIC_URL.replace("https://", ""),
-    headline: portfolio?.headline || "",
-    github: portfolio?.socialLinks?.github || "",
-    linkedin: portfolio?.socialLinks?.linkedin || "",
-    twitter: portfolio?.socialLinks?.twitter || "",
-    website: portfolio?.socialLinks?.website || "",
-  })}`;
-
-  return {
-    title,
-    description,
-    openGraph: {
-      images: [url],
-      title,
-      description,
-      url: `${env.NEXT_PUBLIC_URL}/${portfolioSlug}`,
-      type: "profile",
-    },
-    twitter: {
-      card: "summary_large_image",
-      images: [url],
-      title,
-      description,
-      site: `${env.NEXT_PUBLIC_URL}/${portfolioSlug}`,
-    },
-  };
+  const { "portfolio-slug": slug } = await props.params;
+  return portfolioMetadata(await getPortfolioWithRelations(slug), `/${slug}`);
 }
 
 export default async function PortfolioIndividualPage(props: Props) {
-  const params = await props.params;
-  const { "portfolio-slug": portofolioSlug = "" } = params;
-  const portfolio = await getPortfolioWithRelations(portofolioSlug);
+  const { "portfolio-slug": slug } = await props.params;
+  const portfolio = await getPortfolioWithRelations(slug);
 
   if (!portfolio) {
     notFound();

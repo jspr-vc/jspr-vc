@@ -1,58 +1,42 @@
 "use client";
 
+import NextLink from "next/link";
 import { usePathname } from "next/navigation";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { LinkButton, type LinkButtonProps } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-interface Props {
-  isAdmin?: boolean;
-}
+const tabs = [
+  { href: "/dashboard/portfolio", label: "portfolio" },
+  { href: "/dashboard/experiences", label: "experience" },
+  { href: "/dashboard/projects", label: "projects" },
+  { href: "/dashboard/posts", label: "posts" },
+];
 
-export default function DashboardTabs({ isAdmin = false }: Props) {
+export default function DashboardTabs() {
   const pathname = usePathname();
-  const getProps = (path: string): LinkButtonProps["variant"] =>
-    pathname.startsWith(path) ? "default" : "ghost";
 
   return (
-    <div className="p-2 gap-2 rounded-md flex flex-row flex-nowrap bg-card/30 ring-1 ring-muted self-start">
-      <LinkButton
-        variant={getProps("/dashboard/portfolio")}
-        href="/dashboard/portfolio"
-        size="sm"
-      >
-        Portfolio
-      </LinkButton>
-      <LinkButton
-        variant={getProps("/dashboard/experiences")}
-        href="/dashboard/experiences"
-        size="sm"
-      >
-        Experiences
-      </LinkButton>
-      <LinkButton
-        variant={getProps("/dashboard/projects")}
-        href="/dashboard/projects"
-        size="sm"
-      >
-        Projects
-      </LinkButton>
-      <LinkButton
-        variant={getProps("/dashboard/posts")}
-        href="/dashboard/posts"
-        size="sm"
-      >
-        Posts
-      </LinkButton>
-      {isAdmin && (
-        <LinkButton
-          variant={getProps("/dashboard/admin")}
-          href="/dashboard/admin"
-          size="sm"
-        >
-          Admin
-        </LinkButton>
-      )}
-      <ThemeToggle size="sm" />
-    </div>
+    <nav
+      aria-label="Dashboard"
+      className="no-scrollbar flex gap-7 overflow-x-auto font-mono"
+    >
+      {tabs.map((tab) => {
+        const active = pathname.startsWith(tab.href);
+        return (
+          <NextLink
+            key={tab.href}
+            href={tab.href}
+            aria-current={active ? "page" : undefined}
+            className={cn(
+              "border-b-2 py-3 text-[0.9375rem] transition-colors",
+              active
+                ? "border-dot text-foreground"
+                : "border-transparent text-muted-foreground hover:text-foreground",
+            )}
+          >
+            {tab.label}
+          </NextLink>
+        );
+      })}
+    </nav>
   );
 }

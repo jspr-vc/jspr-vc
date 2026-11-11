@@ -1,224 +1,141 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { IconDeviceFloppy, IconLoader2 } from "@tabler/icons-react";
-import { useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import type { z } from "zod";
+import { SaveStatus, useAppForm, useSaveStatus } from "@/components/form";
 import { updatePortfolioSchema } from "@/lib/validators";
 import type { GetPortfolio } from "@/queries";
 import { updatePortfolio } from "@/server/server-actions";
+
+type Values = z.input<typeof updatePortfolioSchema>;
 
 export interface PortfolioFormProps {
   portfolio: NonNullable<GetPortfolio>;
 }
 
 export function PortfolioForm({ portfolio }: PortfolioFormProps) {
-  const [pending, startTransition] = useTransition();
-  const form = useForm({
-    resolver: zodResolver(updatePortfolioSchema),
-    defaultValues: {
-      name: portfolio.name ?? "",
-      headline: portfolio.headline ?? "",
-      subheading: portfolio.subheading ?? "",
-      about: portfolio.about ?? "",
-      slug: portfolio.slug ?? "",
-      publicEmail: portfolio.publicEmail ?? "",
-      socialLinks: {
-        twitter: portfolio.socialLinks.twitter ?? "",
-        github: portfolio.socialLinks.github ?? "",
-        linkedin: portfolio.socialLinks.linkedin ?? "",
-        website: portfolio.socialLinks.website ?? "",
-      },
+  const defaultValues: Values = {
+    name: portfolio.name ?? "",
+    headline: portfolio.headline ?? "",
+    subheading: portfolio.subheading ?? "",
+    about: portfolio.about ?? "",
+    slug: portfolio.slug ?? "",
+    publicEmail: portfolio.publicEmail ?? "",
+    socialLinks: {
+      twitter: portfolio.socialLinks.twitter ?? "",
+      github: portfolio.socialLinks.github ?? "",
+      linkedin: portfolio.socialLinks.linkedin ?? "",
+      website: portfolio.socialLinks.website ?? "",
     },
+  };
+  const save = useSaveStatus();
+  const form = useAppForm({
+    defaultValues,
+    validators: { onSubmit: updatePortfolioSchema },
+    onSubmit: ({ value, formApi }) =>
+      save.run(formApi, value, async (values) => {
+        await updatePortfolio(updatePortfolioSchema.parse(values));
+        formApi.reset(values);
+      }),
   });
 
-  const submit = form.handleSubmit(async (data) => {
-    startTransition(async () => {
-      await updatePortfolio(data);
-    });
-  }, console.error);
-
   return (
-    <Form {...form}>
-      <form onSubmit={submit}>
-        <div className="flex flex-col gap-4 rounded-md">
-          <Card>
-            <CardHeader>
-              <CardTitle>General Info</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Name</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+    <form
+      className="flex flex-col gap-10"
+      onSubmit={(event) => {
+        event.preventDefault();
+        form.handleSubmit();
+      }}
+    >
+      <form.AppForm>
+        <section>
+          <h2 className="mb-5 font-mono font-semibold text-lg tracking-mono-display">
+            general
+          </h2>
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+            <form.AppField name="name">
+              {(field) => <field.TextField label="Name" />}
+            </form.AppField>
+            <form.AppField name="slug">
+              {(field) => (
+                <field.TextField
+                  label="Slug"
+                  description="Your page: /your-slug"
                 />
-
-                <FormField
-                  control={form.control}
-                  name="slug"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Slug</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+              )}
+            </form.AppField>
+            <form.AppField name="publicEmail">
+              {(field) => <field.TextField label="Public email" />}
+            </form.AppField>
+            <form.AppField name="headline">
+              {(field) => (
+                <field.TextField label="Headline" className="col-span-full" />
+              )}
+            </form.AppField>
+            <form.AppField name="subheading">
+              {(field) => (
+                <field.TextareaField
+                  label="Subheading"
+                  description="Markdown supported."
+                  className="col-span-full"
+                  inputClassName="h-20"
                 />
-                <FormField
-                  control={form.control}
-                  name="publicEmail"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Public Email</FormLabel>
-                      <FormControl>
-                        <Input {...field} value={field.value ?? ""} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+              )}
+            </form.AppField>
+            <form.AppField name="about">
+              {(field) => (
+                <field.TextareaField
+                  label="About"
+                  description="Markdown supported."
+                  className="col-span-full"
+                  inputClassName="h-64"
                 />
-
-                <FormField
-                  control={form.control}
-                  name="headline"
-                  render={({ field }) => (
-                    <FormItem className="col-span-full">
-                      <FormLabel>Headline</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+              )}
+            </form.AppField>
+          </div>
+        </section>
+        <section>
+          <h2 className="mb-5 font-mono font-semibold text-lg tracking-mono-display">
+            links
+          </h2>
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+            <form.AppField name="socialLinks.github">
+              {(field) => (
+                <field.TextField
+                  label="GitHub"
+                  placeholder="https://github.com/you"
                 />
-                <FormField
-                  control={form.control}
-                  name="subheading"
-                  render={({ field }) => (
-                    <FormItem className="col-span-full">
-                      <FormLabel>Subheading</FormLabel>
-                      <FormControl>
-                        <Textarea className="h-20" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+              )}
+            </form.AppField>
+            <form.AppField name="socialLinks.linkedin">
+              {(field) => (
+                <field.TextField
+                  label="LinkedIn"
+                  placeholder="https://www.linkedin.com/in/you"
                 />
-
-                <FormField
-                  control={form.control}
-                  name="about"
-                  render={({ field }) => (
-                    <FormItem className="col-span-full">
-                      <FormLabel>About</FormLabel>
-                      <FormControl>
-                        <Textarea className="h-64" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+              )}
+            </form.AppField>
+            <form.AppField name="socialLinks.twitter">
+              {(field) => (
+                <field.TextField
+                  label="Twitter"
+                  placeholder="https://twitter.com/you"
                 />
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Social Links</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                <FormField
-                  control={form.control}
-                  name="socialLinks.github"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Github</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="socialLinks.linkedin"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>LinkedIn</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="socialLinks.twitter"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Twitter</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="socialLinks.website"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Website</FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </CardContent>
-          </Card>
-          <Button
-            size="sm"
-            className="self-end"
-            type="submit"
-            disabled={pending}
-          >
-            {pending ? (
-              <IconLoader2 className="animate-spin mr-2 h-5 w-5" />
-            ) : (
-              <IconDeviceFloppy className="mr-2 h-5 w-5" />
-            )}
-            Save
-          </Button>
+              )}
+            </form.AppField>
+            <form.AppField name="socialLinks.website">
+              {(field) => (
+                <field.TextField label="Website" placeholder="https://" />
+              )}
+            </form.AppField>
+          </div>
+        </section>
+        <div className="flex flex-wrap items-center justify-end gap-4">
+          <SaveStatus
+            state={save.state}
+            failure="Could not save. If you changed the slug, it may already be taken."
+          />
+          <form.SubmitButton>Save changes</form.SubmitButton>
         </div>
-      </form>
-    </Form>
+      </form.AppForm>
+    </form>
   );
 }

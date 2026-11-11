@@ -1,16 +1,15 @@
 import "@/styles/globals.css";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
-import { ThemeProvider } from "next-themes";
 import type { ReactNode } from "react";
 import { siteConfig } from "@/config/site";
-import { fontSans } from "@/lib/fonts";
-import { cn } from "@/lib/utils";
+import { fontMono, fontSans } from "@/lib/fonts";
+import { themeScript } from "@/lib/theme";
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
+    { media: "(prefers-color-scheme: light)", color: "#0C0C0B" },
+    { media: "(prefers-color-scheme: dark)", color: "#0C0C0B" },
   ],
 };
 
@@ -20,32 +19,23 @@ export const metadata: Metadata = {
     template: `%s - ${siteConfig.name}`,
   },
   description: siteConfig.description,
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
-  },
 };
 
 export default function RootLayout(props: { children: ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head />
-      <body
-        className={cn(
-          "relative min-h-screen bg-background font-sans text-muted-foreground antialiased",
-          fontSans.variable,
-        )}
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 100% 80%, var(--bg-ring) 0%, transparent 100%), radial-gradient(circle at 20px 20px, var(--dots) 2%, transparent 0%)",
-          backgroundSize: "100% 100%, 50px 50px",
-          backgroundAttachment: "fixed",
-        }}
-      >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {props.children}
-        </ThemeProvider>
+    <html
+      lang="en"
+      className={`dark ${fontSans.variable} ${fontMono.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: static theme bootstrap, runs before first paint to avoid a flash
+          dangerouslySetInnerHTML={{ __html: themeScript }}
+        />
+      </head>
+      <body className="min-h-dvh overflow-x-clip">
+        {props.children}
         <Analytics />
       </body>
     </html>
