@@ -1,4 +1,3 @@
-import "@/styles/github-markdown.css";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { siteConfig } from "@/config/site";
@@ -8,21 +7,20 @@ import { sanitizeMarkdown } from "@/lib/sanitize-md";
 import { getPublicPost, getPublicPosts } from "@/queries";
 import { PostPageContent } from "../_post";
 
-export const revalidate = 30;
+// The whole route is prerendered. Nothing here may render per request.
+export const ensureStatic = "navigation";
 
 type Props = {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
+// Cache Components needs at least one param to prerender. The placeholder
+// renders the 404 page when nothing is published yet.
 export async function generateStaticParams() {
-  const portfolios = await getPublicPosts();
+  const posts = await getPublicPosts();
+  const slugs = posts.map((post) => post.slug);
 
-  return portfolios.map((portfolio) => {
-    return {
-      slug: portfolio.slug,
-    };
-  });
+  return (slugs.length > 0 ? slugs : ["-"]).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
@@ -30,35 +28,35 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const post = await getPublicPost(params.slug);
   const title = `${post?.title || "Blog"} — ${siteConfig.name}`;
   const description = sanitizeMarkdown(post?.excerpt || "");
+  const pageUrl = `${env.NEXT_PUBLIC_URL}/posts/${params.slug}`;
 
-  const relativeUrl = `/og/post?${postOgParams({
+  const image = `${env.NEXT_PUBLIC_URL}/og/post?${postOgParams({
     title: post?.title || "",
     slug: post?.slug || "",
     author: post?.author.name || "",
     excerpt: post?.excerpt || "",
   })}`;
 
-  const url = `${env.NEXT_PUBLIC_URL}${relativeUrl}`;
-
   return {
-    title,
+    title: { absolute: title },
     description,
     openGraph: {
-      images: [url],
+      images: [image],
       title,
       description,
-      url: `${env.NEXT_PUBLIC_URL}/posts/${params.slug}`,
-      type: "profile",
+      url: pageUrl,
+      type: "article",
     },
     twitter: {
       card: "summary_large_image",
-      images: [url],
+      images: [image],
       title,
       description,
-      site: `${env.NEXT_PUBLIC_URL}/posts/${params.slug}`,
+      site: pageUrl,
     },
   };
 }
+
 export default async function PostPage(props: Props) {
   const params = await props.params;
   const post = await getPublicPost(params.slug);

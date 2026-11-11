@@ -9,6 +9,8 @@ import {
 } from "@/db/schema";
 
 const emptyString = z.literal("");
+// An uploaded file URL, or a file served from this site's own /public folder.
+const imageUrl = z.url().or(z.string().startsWith("/"));
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const prependedUrl = (url: string) =>
   z
@@ -40,10 +42,15 @@ export const insertExperienceSchema = createInsertSchema(experiences, {
   jobTitle: (jobTitle) => jobTitle.min(3).max(255),
   jobDescription: (jobDescription) => jobDescription.max(2048),
   companyWebsite: (companyWebsite) => companyWebsite.url().or(emptyString),
-  companyLogo: (companyLogo) => companyLogo.url().or(emptyString),
-}).extend({
-  stack: z.array(z.number().positive()),
-});
+  companyLogo: () => imageUrl.or(emptyString).nullish(),
+})
+  .extend({
+    stack: z.array(z.number().positive()),
+  })
+  .refine((exp) => !exp.endedAt || exp.startedAt < exp.endedAt, {
+    path: ["endedAt"],
+    message: "End date must be after the start date",
+  });
 
 export const insertTechnologiesSchema = createInsertSchema(technologies, {
   slug: (slug) => slug.min(1).regex(slugRegex),
@@ -59,7 +66,8 @@ export const insertTechnologiesSchema = createInsertSchema(technologies, {
 export const insertProjectSchema = createInsertSchema(projects, {
   slug: (slug) => slug.min(1).regex(slugRegex),
   name: (name) => name.min(1).max(255),
-  thumbnail: (thumbnail) => thumbnail.url().or(emptyString),
+  thumbnail: () => imageUrl.or(emptyString).nullish(),
+  link: () => z.url().or(emptyString).nullish(),
   body: (body) => body.max(10000),
 }).extend({
   stack: z.array(z.number().positive()),

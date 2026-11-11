@@ -1,57 +1,40 @@
-import { IconCirclePlus } from "@tabler/icons-react";
-import { format } from "date-fns";
-import NextLink from "next/link";
-import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  TypographyH3,
-  TypographyLarge,
-  TypographySmall,
-} from "@/components/ui/typography";
+import { formatDay } from "@/lib/format";
 import { getPostsByAuthorId } from "@/queries";
-import { authOptions } from "@/server/auth-options";
+import { getCurrentUser } from "@/server/session";
+import { PageHeader } from "../_page-header";
+import { AddButton, EmptyList, Row, RowList } from "../_row";
 
 export default async function PostDashboard() {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    redirect("/sign-in");
-  }
-
-  const posts = await getPostsByAuthorId(session.user.portfolioId);
+  const user = await getCurrentUser();
+  const posts = await getPostsByAuthorId(user.portfolioId);
 
   return (
-    <div className="flex flex-col gap-4">
-      <TypographyH3 className="leading-none">Posts</TypographyH3>
-      <TypographySmall>
-        You can also refer to this as blog posts
-      </TypographySmall>
-      {posts.map((post) => (
-        <NextLink key={post.id} href={`/dashboard/posts/${post.id}/edit`}>
-          <Card className="flex flex-col h-full cursor-pointer border border-muted hover:border-muted-foreground/30 transition">
-            <CardHeader>
-              <CardTitle>{post.title}</CardTitle>
-            </CardHeader>
-            <CardContent className="flex-1">{post.excerpt}</CardContent>
-            <CardFooter>{format(post.createdAt, "MMMM dd, yyyy")}</CardFooter>
-          </Card>
-        </NextLink>
-      ))}
-
-      <NextLink href="/dashboard/posts/add">
-        <Card className="h-full flex items-center justify-center border border-muted hover:border-muted-foreground/30 transition">
-          <div className="flex items-center gap-2 py-4">
-            <IconCirclePlus className="w-4 h-4" />
-            <TypographyLarge className="inline">Create Post</TypographyLarge>
-          </div>
-        </Card>
-      </NextLink>
-    </div>
+    <>
+      <PageHeader title="Posts">
+        <AddButton href="/dashboard/posts/add" label="Write a post" />
+      </PageHeader>
+      {posts.length === 0 ? (
+        <EmptyList>
+          No posts yet. Drafts stay private until you publish them.
+        </EmptyList>
+      ) : (
+        <RowList>
+          {posts.map((post) => (
+            <Row
+              key={post.id}
+              href={`/dashboard/posts/${post.id}/edit`}
+              meta={`${post.status}, ${formatDay(post.publishedAt ?? post.createdAt)}`}
+              title={post.title}
+            >
+              {post.excerpt && (
+                <p className="mt-1 line-clamp-2 text-muted-foreground text-sm">
+                  {post.excerpt}
+                </p>
+              )}
+            </Row>
+          ))}
+        </RowList>
+      )}
+    </>
   );
 }

@@ -1,20 +1,23 @@
 import { desc, eq, or } from "drizzle-orm";
-import { cache } from "react";
+import { cacheLife, cacheTag } from "next/cache";
 import { db } from "@/db/client";
 import { portfolios } from "@/db/schema";
 import { env } from "@/env";
+import { CacheTag } from "./tags";
 
 /* -------------------------------------------------------------------------------------------------
  * Queries
  * -----------------------------------------------------------------------------------------------*/
 
 /*
- * Get portfolio by id or slug with all relations.
+ * Get portfolio by user id or slug with all relations.
  */
-export const getPortfolioWithRelations = cache(async (idOrSlug: string) => {
+export async function getPortfolioWithRelations(idOrSlug: string) {
+  "use cache";
+  cacheLife("hours");
+
   const portfolio = await db.query.portfolios.findFirst({
     with: {
-      user: true,
       experiences: {
         orderBy: (exps) => desc(exps.startedAt),
         with: { stack: { with: { tech: true } } },
@@ -30,31 +33,44 @@ export const getPortfolioWithRelations = cache(async (idOrSlug: string) => {
     },
     where: or(eq(portfolios.userId, idOrSlug), eq(portfolios.slug, idOrSlug)),
   });
+  cacheTag(
+    CacheTag.Portfolios,
+    ...(portfolio ? [CacheTag.Portfolio(portfolio.id)] : []),
+  );
   return portfolio;
-});
+}
 
 /*
- * Get portfolio by id or slug.
+ * Get portfolio by user id or slug.
  */
-export const getPortfolio = cache(async (idOrSlug: string) => {
+export async function getPortfolio(idOrSlug: string) {
+  "use cache";
+  cacheLife("hours");
+
   const portfolio = await db.query.portfolios.findFirst({
     where: or(eq(portfolios.userId, idOrSlug), eq(portfolios.slug, idOrSlug)),
   });
+  cacheTag(
+    CacheTag.Portfolios,
+    ...(portfolio ? [CacheTag.Portfolio(portfolio.id)] : []),
+  );
   return portfolio;
-});
+}
 
 /*
  * Get the default portfolio shown on the "/" route. Uses DEFAULT_PORTFOLIO_ID
  * when set, otherwise falls back to the first portfolio in the database
  * (most likely the owner of the project).
  */
-export const getFirstPortfolio = cache(async () => {
+export async function getFirstPortfolio() {
+  "use cache";
+  cacheLife("hours");
+
   const portfolio = await db.query.portfolios.findFirst({
     where: env.DEFAULT_PORTFOLIO_ID
       ? eq(portfolios.id, env.DEFAULT_PORTFOLIO_ID)
       : undefined,
     with: {
-      user: true,
       experiences: {
         orderBy: (exps) => desc(exps.startedAt),
         with: { stack: { with: { tech: true } } },
@@ -69,41 +85,20 @@ export const getFirstPortfolio = cache(async () => {
       },
     },
   });
+  cacheTag(
+    CacheTag.Portfolios,
+    ...(portfolio ? [CacheTag.Portfolio(portfolio.id)] : []),
+  );
   return portfolio;
-});
-
-export const getPortfolios = cache(async () => {
-  const portfolioList = await db.query.portfolios.findMany({
-    with: {
-      user: true,
-      experiences: {
-        with: {
-          stack: {
-            with: {
-              tech: true,
-            },
-          },
-        },
-      },
-      projects: true,
-    },
-  });
-  return portfolioList;
-});
-
-/* -------------------------------------------------------------------------------------------------
- * Preloads
- * -----------------------------------------------------------------------------------------------*/
-export function preloadGetPortfolio(idOrSlug: string) {
-  void getPortfolio(idOrSlug);
 }
 
-export function preloadGetFirstPortfolio(idOrSlug: string) {
-  void getPortfolio(idOrSlug);
-}
+export async function getPortfolioSlugs() {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CacheTag.Portfolios);
 
-void getPortfolios();
-export function preloadPortfolios() {}
+  return await db.query.portfolios.findMany({ columns: { slug: true } });
+}
 
 /* -------------------------------------------------------------------------------------------------
  * Types
@@ -113,7 +108,4 @@ export type GetPortfolioWithRelations = NonNullable<
 >;
 export type GetPortfolio = NonNullable<
   Awaited<ReturnType<typeof getPortfolio>>
->;
-export type GetPortfolios = NonNullable<
-  Awaited<ReturnType<typeof getPortfolios>>
 >;

@@ -1,62 +1,48 @@
-import { IconArrowLeft } from "@tabler/icons-react";
-import { notFound, redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
-import { LinkButton } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { notFound } from "next/navigation";
 import { getAllTech, getProject } from "@/queries";
-import { authOptions } from "@/server/auth-options";
+import { deleteProject } from "@/server/server-actions/project-delete";
+import { getCurrentUser } from "@/server/session";
+import { DeleteZone } from "../../../_delete-zone";
+import { PageHeader } from "../../../_page-header";
 import { ProjectForm } from "../../_form";
-import ProjectEditDangerZone from "./_danger_zone";
 
 interface Props {
-  params: Promise<{
-    id: string;
-  }>;
+  params: Promise<{ id: string }>;
 }
 
 export default async function ProjectEditPage(props: Props) {
-  const params = await props.params;
-
-  const { id } = params;
-
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    redirect("/sign-in");
-  }
-
-  const techPromise = getAllTech();
-  const projectPromise = getProject(Number.parseInt(id, 10));
-  const portfolioId = session.user.portfolioId;
-
-  const [technologies, project] = await Promise.all([
-    techPromise,
-    projectPromise,
+  const [{ id }, user, technologies] = await Promise.all([
+    props.params,
+    getCurrentUser(),
+    getAllTech(),
   ]);
-  if (project?.portfolioId !== portfolioId || !project) {
+  const projectId = Number.parseInt(id, 10);
+  const project = Number.isNaN(projectId)
+    ? undefined
+    : await getProject(projectId);
+  if (!project || project.portfolioId !== user.portfolioId) {
     notFound();
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-row items-center gap-4 justify-between">
-        <LinkButton variant="secondary" href="/dashboard/projects">
-          <IconArrowLeft className="w-4 h-4 mr-2" />
-          Go back to Projects
-        </LinkButton>
+    <div className="flex flex-col gap-8">
+      <div>
+        <PageHeader
+          title="Edit project"
+          back={{ href: "/dashboard/projects", label: "projects" }}
+        />
+        <ProjectForm
+          project={project}
+          technologies={technologies}
+          portfolioId={user.portfolioId}
+        />
       </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Edit Project</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ProjectForm
-            project={project}
-            technologies={technologies}
-            portfolioId={portfolioId}
-          />
-        </CardContent>
-      </Card>
-      <ProjectEditDangerZone projectId={project.id} />
+      <DeleteZone
+        noun="project"
+        consequence="It is removed from your portfolio. This cannot be undone."
+        action={deleteProject.bind(null, project.id)}
+        redirectTo="/dashboard/projects"
+      />
     </div>
   );
 }

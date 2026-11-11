@@ -1,41 +1,21 @@
-import { IconArrowLeft } from "@tabler/icons-react";
-import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
-import { LinkButton } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAllTech } from "@/queries";
-import { authOptions } from "@/server/auth-options";
+import { getCurrentUser } from "@/server/session";
+import { PageHeader } from "../../_page-header";
 import { ProjectForm } from "../_form";
 
-export default async function ExperienceAddPage() {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    redirect("/sign-in");
-  }
-
-  const technologies = await getAllTech();
+export default async function ProjectAddPage() {
+  const [user, technologies] = await Promise.all([
+    getCurrentUser(),
+    getAllTech(),
+  ]);
 
   return (
-    <div className="flex flex-col gap-4">
-      <LinkButton
-        href="/dashboard/projects"
-        className="self-start"
-        variant="secondary"
-      >
-        <IconArrowLeft className="w-4 h-4 mr-2" />
-        Go back to Projects
-      </LinkButton>
-      <Card>
-        <CardHeader>
-          <CardTitle>Add Project</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ProjectForm
-            technologies={technologies}
-            portfolioId={session.user.portfolioId}
-          />
-        </CardContent>
-      </Card>
-    </div>
+    <>
+      <PageHeader
+        title="Add project"
+        back={{ href: "/dashboard/projects", label: "projects" }}
+      />
+      <ProjectForm technologies={technologies} portfolioId={user.portfolioId} />
+    </>
   );
 }

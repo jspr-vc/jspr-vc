@@ -1,17 +1,19 @@
 "use client";
 
-import { cva } from "class-variance-authority";
 import type * as React from "react";
-
 import { cn } from "@/lib/utils";
 
-const labelVariants = cva(
-  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
-);
-
 function Label({ className, ...props }: React.ComponentProps<"label">) {
-  // biome-ignore lint/a11y/noLabelWithoutControl: reusable label primitive; the control is associated via htmlFor at call sites (e.g. FormLabel)
-  return <label className={cn(labelVariants(), className)} {...props} />;
+  return (
+    <label
+      data-slot="label"
+      className={cn(
+        "flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
 export { Label };

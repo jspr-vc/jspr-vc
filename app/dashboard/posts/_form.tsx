@@ -1,199 +1,174 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  IconDeviceFloppy,
   IconGitPullRequestDraft,
   IconLoader2,
   IconSend,
 } from "@tabler/icons-react";
+import { useStore } from "@tanstack/react-form";
 import { format } from "date-fns";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { useForm } from "react-hook-form";
+import type { z } from "zod";
+import { SaveStatus, useAppForm, useSaveStatus } from "@/components/form";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { TypographySmall } from "@/components/ui/typography";
 import type { Post } from "@/db/schema";
+import { slugify } from "@/lib/format";
 import { insertPostSchema } from "@/lib/validators";
 import type { GetPost } from "@/queries";
 import { upsertPost } from "@/server/server-actions";
 import { setPostStatus } from "@/server/server-actions/post-actions";
+
+type Values = z.input<typeof insertPostSchema>;
+type Saved = Pick<
+  Post,
+  "id" | "title" | "excerpt" | "body" | "slug" | "thumbnail" | "status"
+>;
 
 interface Props {
   post?: GetPost;
   portfolioId: number;
 }
 
+function toValues(portfolioId: number, post?: Saved): Values {
+  return {
+    id: post?.id,
+    authorId: portfolioId,
+    title: post?.title ?? "",
+    excerpt: post?.excerpt ?? "",
+    body: post?.body ?? "",
+    slug: post?.slug ?? "",
+    thumbnail: post?.thumbnail ?? "",
+    status: post?.status ?? "draft",
+  };
+}
+
 export function PostForm({ post, portfolioId }: Props) {
   const router = useRouter();
-  const [pending, startTransition] = useTransition();
-  const postForm = useForm({
-    resolver: zodResolver(insertPostSchema),
-    defaultValues: {
-      id: post?.id,
-      authorId: portfolioId,
-      title: post?.title ?? "",
-      excerpt: post?.excerpt ?? "",
-      body: post?.body ?? "",
-      slug: post?.slug ?? "",
-      thumbnail: post?.thumbnail ?? "",
-      status: post?.status ?? "draft",
-    },
+  const isEdit = Boolean(post);
+  const save = useSaveStatus();
+  const form = useAppForm({
+    defaultValues: toValues(portfolioId, post),
+    validators: { onSubmit: insertPostSchema },
+    // Submitting with a status publishes or unpublishes; without one it saves.
+    onSubmitMeta: {} as { status?: Post["status"] },
+    onSubmit: ({ value, formApi, meta }) =>
+      save.run(formApi, value, async (values) => {
+        const data = insertPostSchema.parse(values);
+        const saved = meta.status
+          ? await setPostStatus(data, meta.status)
+          : await upsertPost(data);
+        formApi.reset(toValues(portfolioId, saved));
+
+        if (!isEdit) {
+          router.push(`/dashboard/posts/${saved.id}/edit`);
+        }
+      }),
   });
 
-  const status = postForm.watch("status");
-
-  const isEdit = Boolean(post);
-  const saveAsDraft = postForm.handleSubmit((values) => {
-    startTransition(async () => {
-      const newPost = await upsertPost(values);
-      postForm.reset({
-        id: newPost.id,
-        authorId: portfolioId,
-        title: newPost.title,
-        excerpt: newPost.excerpt ?? "",
-        body: newPost.body,
-        slug: newPost.slug,
-        thumbnail: newPost.thumbnail ?? "",
-        status: newPost.status,
-      });
-
-      if (!isEdit) {
-        router.push(`/dashboard/posts/${newPost.id}/edit`);
-      }
-    });
-  }, console.error);
-
-  const updateStatus = (status: Post["status"]) =>
-    postForm.handleSubmit((post) => {
-      startTransition(async () => {
-        const newPost = await setPostStatus(post, status);
-        postForm.reset({
-          id: newPost.id,
-          authorId: portfolioId,
-          title: newPost.title,
-          excerpt: newPost.excerpt ?? "",
-          body: newPost.body,
-          slug: newPost.slug,
-          thumbnail: newPost.thumbnail ?? "",
-          status: newPost.status,
-        });
-      });
-    });
+  const status = useStore(form.store, (state) => state.values.status);
+  const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
 
   return (
-    <Form {...postForm}>
-      <div className="flex flex-col gap-4">
-        <form>
-          <div className="flex flex-col gap-4">
-            <FormField
-              control={postForm.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+    <form
+      className="flex flex-col gap-5"
+      onSubmit={(event) => {
+        event.preventDefault();
+        form.handleSubmit({});
+      }}
+    >
+      <form.AppForm>
+        <form.AppField
+          name="title"
+          listeners={{
+            // A new post's slug follows its title until the slug is edited.
+            onChange: ({ value }) => {
+              if (!isEdit && !form.getFieldMeta("slug")?.isDirty) {
+                form.setFieldValue("slug", slugify(value), {
+                  dontUpdateMeta: true,
+                });
+              }
+            },
+          }}
+        >
+          {(field) => <field.TextField label="Title" />}
+        </form.AppField>
+        <form.AppField name="slug">
+          {(field) => (
+            <field.TextField
+              label="Slug"
+              description="The post's address: /posts/your-slug"
             />
-            <FormField
-              control={postForm.control}
-              name="slug"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Slug</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+          )}
+        </form.AppField>
+        <form.AppField name="body">
+          {(field) => (
+            <field.TextareaField
+              label="Body"
+              description="Markdown supported."
+              inputClassName="min-h-96 font-mono"
             />
-            <FormField
-              control={postForm.control}
-              name="body"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Body</FormLabel>
-                  <FormControl>
-                    <Textarea className="min-h-[400px]" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                  <FormDescription>Markdown supported.</FormDescription>
-                </FormItem>
-              )}
+          )}
+        </form.AppField>
+        <form.AppField name="excerpt">
+          {(field) => (
+            <field.TextareaField
+              label="Excerpt"
+              description="One or two sentences shown under the title and in link previews."
             />
-            <FormField
-              control={postForm.control}
-              name="excerpt"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Excerpt</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} value={field.value ?? ""} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+          )}
+        </form.AppField>
+        <form.AppField name="thumbnail">
+          {(field) => (
+            <field.ImageUploadField
+              label="Thumbnail"
+              description="Shown at the top of the post."
             />
-          </div>
-        </form>
-        <div className="flex justify-end items-center gap-4">
+          )}
+        </form.AppField>
+        <div className="flex flex-wrap items-center justify-end gap-4">
+          <SaveStatus
+            state={save.state}
+            failure="Could not save. If you changed the slug, it may already be taken."
+          />
           {post?.publishedAt && (
-            <NextLink href={`/posts/${post.slug}`}>
-              <TypographySmall className="leading-none cursor-pointer text-blue-400">
-                Published at {format(post.publishedAt, "MMMM dd, yyyy")}
-              </TypographySmall>
+            <NextLink href={`/posts/${post.slug}`} className="link text-sm">
+              Published {format(post.publishedAt, "MMMM d, yyyy")}
             </NextLink>
           )}
           {post?.status === "draft" && isEdit && (
-            <NextLink href={`/posts/preview/${post.id}`}>
-              <TypographySmall className="leading-none cursor-pointer text-blue-400">
-                Preview post
-              </TypographySmall>
+            <NextLink
+              href={`/posts/preview/${post.id}`}
+              className="link text-sm"
+            >
+              Preview post
             </NextLink>
           )}
-          <Button disabled={pending} onClick={saveAsDraft} variant="secondary">
-            {pending ? (
-              <IconLoader2 className="animate-spin mr-2 w-5 h-5" />
-            ) : (
-              <IconDeviceFloppy className="mr-2 w-5 h-5" />
-            )}
-            {post ? "Save" : "Save as draft"}
-          </Button>
+          <form.SubmitButton variant={isEdit ? "secondary" : "default"}>
+            {post ? "Save changes" : "Save as draft"}
+          </form.SubmitButton>
           {isEdit && (
             <Button
-              disabled={pending}
-              onClick={updateStatus(
-                status === "published" ? "draft" : "published",
-              )}
+              type="button"
+              size="lg"
+              disabled={isSubmitting}
+              onClick={() =>
+                form.handleSubmit({
+                  status: status === "published" ? "draft" : "published",
+                })
+              }
             >
-              {pending ? (
-                <IconLoader2 className="animate-spin mr-2 w-5 h-5" />
+              {isSubmitting ? (
+                <IconLoader2 className="animate-spin" />
               ) : status === "published" ? (
-                <IconGitPullRequestDraft className="mr-2 w-5 h-5" />
+                <IconGitPullRequestDraft />
               ) : (
-                <IconSend className="mr-2 w-5 h-5" />
+                <IconSend />
               )}
               {status === "published" ? "Convert to draft" : "Publish"}
             </Button>
           )}
         </div>
-      </div>
-    </Form>
+      </form.AppForm>
+    </form>
   );
 }

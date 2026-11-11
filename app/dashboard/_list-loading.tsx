@@ -1,45 +1,14 @@
-import type { ComponentProps } from "react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
 
-export default function Loading({
-  className,
-  ...props
-}: ComponentProps<"div">) {
+export default function Loading() {
   return (
-    <div
-      className={cn("grid grid-cols-1 lg:grid-cols-3 gap-4", className)}
-      {...props}
-    >
-      {new Array(3).fill(0).map((_, i) => (
-        // biome-ignore lint/suspicious/noArrayIndexKey: static placeholder skeletons with no stable id
-        <Card className="min-h-[200px]" key={i}>
-          <CardHeader>
-            <Skeleton className="h-6 w-40" />
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col gap-4">
-              <Skeleton className="w-full h-16" />
-
-              <div className="flex gap-2 items-center flex-wrap">
-                {new Array(6).fill(0).map((_, i) => (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: static placeholder skeletons with no stable id
-                  <Skeleton key={i} className="w-16 h-4" />
-                ))}
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Skeleton className="w-20 h-6" />
-          </CardFooter>
-        </Card>
-      ))}
+    <div>
+      <Skeleton className="mb-6 h-8 w-40" />
+      <div className="flex flex-col gap-px">
+        {["a", "b", "c"].map((key) => (
+          <Skeleton key={key} className="h-20 w-full" />
+        ))}
+      </div>
     </div>
   );
 }
