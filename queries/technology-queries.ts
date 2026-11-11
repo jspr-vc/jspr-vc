@@ -1,12 +1,15 @@
-import { eq } from "drizzle-orm";
-import { cache } from "react";
+import { cacheLife, cacheTag } from "next/cache";
 import { db } from "@/db/client";
-import { technologies } from "@/db/schema";
+import { CacheTag } from "./tags";
 
 /* -------------------------------------------------------------------------------------------------
  * Queries
  * -----------------------------------------------------------------------------------------------*/
-export const getAllTech = cache(async () => {
+export async function getAllTech() {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CacheTag.Technologies);
+
   const results = await db.query.technologies.findMany();
   return results.reduce<Record<number, (typeof results)[number]>>(
     (acc, curr) => {
@@ -15,21 +18,7 @@ export const getAllTech = cache(async () => {
     },
     {},
   );
-});
-
-export const getTechnoloById = cache(async (id: number) => {
-  const result = await db.query.technologies.findFirst({
-    where: eq(technologies.id, id),
-  });
-  return result;
-});
-
-/* -------------------------------------------------------------------------------------------------
- * Preloads
- * -----------------------------------------------------------------------------------------------*/
-export const preloadTechnologies = () => {
-  void getAllTech();
-};
+}
 
 /* -------------------------------------------------------------------------------------------------
  * Types

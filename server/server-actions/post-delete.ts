@@ -1,11 +1,11 @@
 "use server";
 import { and, eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import { db } from "@/db/client";
 import { posts } from "@/db/schema";
+import { CacheTag } from "@/queries/tags";
 import { authOptions } from "../auth-options";
-import { revalidateHomeIfDefault } from "./revalidate-home";
+import { invalidate } from "./invalidate";
 
 export async function deletePost(postId: number) {
   const session = await getServerSession(authOptions);
@@ -20,9 +20,10 @@ export async function deletePost(postId: number) {
     )
     .returning();
 
-  revalidatePath("/dashboard/posts");
-  revalidatePath(`/dashboard/posts/${postId}/edit`);
-  revalidatePath(`/${session.user.portfolioSlug}`);
-  await revalidateHomeIfDefault(session.user.portfolioId);
+  invalidate(
+    CacheTag.Portfolio(session.user.portfolioId),
+    CacheTag.Posts,
+    CacheTag.Post(postId),
+  );
   return result;
 }

@@ -1,11 +1,11 @@
 "use server";
 import { and, eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import { db } from "@/db/client";
 import { projects } from "@/db/schema";
+import { CacheTag } from "@/queries/tags";
 import { authOptions } from "../auth-options";
-import { revalidateHomeIfDefault } from "./revalidate-home";
+import { invalidate } from "./invalidate";
 
 export async function deleteProject(projectId: number) {
   const session = await getServerSession(authOptions);
@@ -23,9 +23,9 @@ export async function deleteProject(projectId: number) {
     )
     .returning();
 
-  revalidatePath("/dashboard/projects");
-  revalidatePath(`/dashboard/projects/${projectId}/edit`);
-  revalidatePath(`/${session.user.portfolioSlug}`);
-  await revalidateHomeIfDefault(session.user.portfolioId);
+  invalidate(
+    CacheTag.Portfolio(session.user.portfolioId),
+    CacheTag.Project(projectId),
+  );
   return result;
 }

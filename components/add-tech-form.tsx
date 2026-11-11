@@ -1,153 +1,80 @@
-import "@uploadthing/react/styles.css";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { IconDeviceFloppy, IconLoader2, IconTrash } from "@tabler/icons-react";
-import { useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { UploadDropzone } from "@/lib/uploadthing";
+"use client";
+import type { z } from "zod";
+import { slugify } from "@/lib/format";
 import { insertTechnologiesSchema } from "@/lib/validators";
 import {
   type InsertTechnology,
   insertTechnology,
 } from "@/server/server-actions";
-import { Button } from "./ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
+import { SaveStatus, useAppForm, useSaveStatus } from "./form";
+
+type Values = z.input<typeof insertTechnologiesSchema>;
 
 interface Props {
   onSuccess: (newTech: InsertTechnology) => void;
 }
 
 export function TechnologyAddForm({ onSuccess }: Props) {
-  const [pending, startTransition] = useTransition();
-
-  const form = useForm({
-    resolver: zodResolver(insertTechnologiesSchema),
-    defaultValues: {
-      name: "",
-      slug: "",
-      description: "",
-      icon: "",
-    },
+  const defaultValues: Values = {
+    name: "",
+    slug: "",
+    description: "",
+    icon: "",
+  };
+  const save = useSaveStatus();
+  const form = useAppForm({
+    defaultValues,
+    validators: { onSubmit: insertTechnologiesSchema },
+    onSubmit: ({ value, formApi }) =>
+      save.run(formApi, value, async (values) => {
+        onSuccess(
+          await insertTechnology(insertTechnologiesSchema.parse(values)),
+        );
+      }),
   });
 
-  const icon = form.watch("icon");
-
-  const submit = form.handleSubmit((data) => {
-    startTransition(async () => {
-      try {
-        const result = await insertTechnology(data);
-        onSuccess(result);
-      } catch (e) {
-        console.error(e);
-      }
-    });
-  }, console.error);
-
   return (
-    <Form {...form}>
-      <form onSubmit={submit}>
-        <div className="grid grid-cols-1 gap-4">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Technology Name *</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="NextJs..." />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="slug"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Slug *</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="nextjs" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea
-                    {...field}
-                    value={field.value ?? ""}
-                    placeholder="A React framework for the web..."
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="icon"
-            render={() => (
-              <FormItem>
-                <FormLabel>Icon</FormLabel>
-                <FormControl>
-                  <div className="flex flex-col gap-2 items-center ring-1 ring-muted p-8">
-                    {icon && (
-                      <div className="relative p-4 bg-card/30 rounded-md w-full">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="absolute top-2 right-2"
-                          onClick={() => form.setValue("icon", "")}
-                        >
-                          <IconTrash className="h-4 w-4" />
-                        </Button>
-                        <div
-                          className="bg-contain w-full h-40 bg-center bg-no-repeat"
-                          style={{ backgroundImage: `url("${icon}")` }}
-                        />
-                      </div>
-                    )}
-                    <UploadDropzone
-                      className="w-full"
-                      endpoint="imageUploader"
-                      onClientUploadComplete={(res = []) => {
-                        const file = res.at(0);
-                        if (file) {
-                          form.setValue("icon", file.ufsUrl);
-                        }
-                      }}
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button>
-            {pending ? (
-              <IconLoader2 className="animate-spin mr-2 h-5 w-5" />
-            ) : (
-              <IconDeviceFloppy className="mr-2 h-5 w-5" />
-            )}
-            Add
-          </Button>
-        </div>
-      </form>
-    </Form>
+    <form
+      className="grid grid-cols-1 gap-4"
+      onSubmit={(event) => {
+        event.preventDefault();
+        // Rendered inside another form's dialog; keep the submit from bubbling.
+        event.stopPropagation();
+        form.handleSubmit();
+      }}
+    >
+      <form.AppForm>
+        <form.AppField
+          name="name"
+          listeners={{
+            onChange: ({ value }) => {
+              if (!form.getFieldMeta("slug")?.isDirty) {
+                form.setFieldValue("slug", slugify(value), {
+                  dontUpdateMeta: true,
+                });
+              }
+            },
+          }}
+        >
+          {(field) => <field.TextField label="Name" placeholder="Next.js" />}
+        </form.AppField>
+        <form.AppField name="slug">
+          {(field) => <field.TextField label="Slug" placeholder="nextjs" />}
+        </form.AppField>
+        <form.AppField name="description">
+          {(field) => (
+            <field.TextareaField
+              label="Description"
+              placeholder="Shown when someone hovers the tag"
+            />
+          )}
+        </form.AppField>
+        <form.AppField name="icon">
+          {(field) => <field.ImageUploadField label="Icon" />}
+        </form.AppField>
+        <SaveStatus state={save.state} />
+        <form.SubmitButton>Add technology</form.SubmitButton>
+      </form.AppForm>
+    </form>
   );
 }

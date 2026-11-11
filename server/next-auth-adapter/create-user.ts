@@ -1,13 +1,15 @@
 import { randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
+import { revalidateTag } from "next/cache";
 import type { Adapter, AdapterUser } from "next-auth/adapters";
 import { db } from "@/db/client";
 import { portfolios, users } from "@/db/schema";
+import { CacheTag } from "@/queries/tags";
 
 export const createUser: NonNullable<Adapter["createUser"]> = async (
   payload: Omit<AdapterUser, "id">,
 ) => {
-  return await db.transaction(async (tx) => {
+  const user = await db.transaction(async (tx) => {
     const id = randomUUID();
     await tx.insert(users).values({ ...payload, id });
     const name = payload.name ?? "";
@@ -53,4 +55,7 @@ export const createUser: NonNullable<Adapter["createUser"]> = async (
       portfolioSlug: portfolio.slug,
     } satisfies AdapterUser;
   });
+
+  revalidateTag(CacheTag.Portfolios, "max");
+  return user;
 };

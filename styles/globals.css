@@ -1,172 +1,332 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-
-@source '../node_modules/@uploadthing/react/dist/**';
+@import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
 
-@utility container {
-  margin-inline: auto;
-  padding-inline: 2rem;
-  @media (width >= --theme(--breakpoint-sm)) {
-    max-width: none;
-  }
-  @media (width >= 1400px) {
-    max-width: 1400px;
-  }
-}
-
-@theme {
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-
-  --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-sm: calc(var(--radius) - 4px);
-
-  --animate-accordion-down: accordion-down 0.2s ease-out;
-  --animate-accordion-up: accordion-up 0.2s ease-out;
-
-  @keyframes accordion-down {
-    from {
-      height: 0px;
-    }
-    to {
-      height: var(--radix-accordion-content-height);
-    }
-  }
-  @keyframes accordion-up {
-    from {
-      height: var(--radix-accordion-content-height);
-    }
-    to {
-      height: 0px;
-    }
-  }
-}
-
 /*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
+ * jspr.vc brand kit v0.1
+ * Ink #0C0C0B, Graphite #1C1C1A, Ash #8A8A85, Bone #EDEDE8, Signal #D4FF3A.
+ * Signal is an accent only (the dot, links, focus). It is never body text on Bone.
+ */
+:root {
+  --ink: #0c0c0b;
+  --coal: #121211;
+  --graphite: #1c1c1a;
+  --seam: #2a2a27;
+  --slate: #5c5c58;
+  --ash: #8a8a85;
+  --fog: #c9c9c3;
+  --bone: #edede8;
+  --signal: #d4ff3a;
 
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
+  --radius: 0.75rem;
+
+  --ground: #dcdcd4;
+  --background: var(--bone);
+  --foreground: var(--ink);
+  --soft-foreground: #2a2a27;
+  --card: #e4e4de;
+  --card-foreground: var(--ink);
+  --popover: #f4f4f0;
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: var(--bone);
+  --secondary: #dcdcd5;
+  --secondary-foreground: var(--ink);
+  --muted: #dfdfd9;
+  --muted-foreground: var(--slate);
+  --accent: #d8d8d1;
+  --accent-foreground: var(--ink);
+  --destructive: #b8320a;
+  --border: #cdcdc6;
+  --input: #bcbcb5;
+  --ring: var(--ink);
+  --dot: var(--ink);
+  --link: var(--ink);
+  --link-mark: var(--signal);
 }
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+.dark {
+  --ground: var(--coal);
+  --background: var(--ink);
+  --foreground: var(--bone);
+  --soft-foreground: var(--fog);
+  --card: var(--coal);
+  --card-foreground: var(--bone);
+  --popover: var(--graphite);
+  --popover-foreground: var(--bone);
+  --primary: var(--bone);
+  --primary-foreground: var(--ink);
+  --secondary: var(--graphite);
+  --secondary-foreground: var(--bone);
+  --muted: var(--graphite);
+  --muted-foreground: var(--ash);
+  --accent: var(--seam);
+  --accent-foreground: var(--bone);
+  --destructive: #ff6a3d;
+  --border: var(--seam);
+  --input: #3a3a36;
+  --ring: var(--signal);
+  --dot: var(--signal);
+  --link: var(--signal);
+  --link-mark: transparent;
+}
 
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
+@theme inline {
+  --font-sans:
+    var(--font-geist-sans), "Geist", "Helvetica Neue", ui-sans-serif, system-ui,
+    sans-serif;
+  --font-mono:
+    var(--font-geist-mono), "Geist Mono", ui-monospace, "SFMono-Regular",
+    monospace;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
+  --color-ground: var(--ground);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-soft: var(--soft-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-signal: var(--signal);
+  --color-ink: var(--ink);
+  --color-dot: var(--dot);
+  --color-link: var(--link);
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.35);
+  --radius-2xl: calc(var(--radius) * 1.7);
+  --radius-tile: 1.25rem;
 
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
+  --tracking-display: -0.045em;
+  --tracking-mono-display: -0.04em;
 
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
+  --animate-dot-in: dot-in 0.7s cubic-bezier(0.2, 1.4, 0.4, 1) 0.15s both;
 
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-
-    --ring: 0 0% 63.9%;
-
-    --radius: 0.5rem;
-
-    --dots: #ddd;
-    --bg-ring: rgba(255, 255, 255, 0.5);
-  }
-
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 85.7% 97.3%;
-
-    --ring: 0 0% 14.9%;
-
-    --dots: #222;
-    --bg-ring: rgba(255, 255, 255, 0.1);
+  @keyframes dot-in {
+    from {
+      scale: 0;
+      opacity: 0;
+    }
+    to {
+      scale: 1;
+      opacity: 1;
+    }
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border outline-ring/50;
   }
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background font-sans text-foreground antialiased;
+    font-feature-settings: "ss01", "cv11";
   }
+  ::selection {
+    background: var(--signal);
+    color: var(--ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0s !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* The dot from the mark. Slightly irregular on purpose, never a perfect circle. */
+@utility pebble {
+  display: inline-block;
+  background: var(--dot);
+  border-radius: 48% 52% 42% 58% / 56% 44% 56% 44%;
+}
+
+/* Inline text link. Signal text on Ink, Ink text with a Signal marker on Bone. */
+@utility link {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--link) 45%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  background-image: linear-gradient(var(--link-mark), var(--link-mark));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 0;
+  transition:
+    background-size 0.15s ease-out,
+    text-decoration-color 0.15s ease-out;
+  &:hover {
+    text-decoration-color: var(--link);
+    background-size: 100% 100%;
+  }
+}
+
+/* Long-form text rendered from markdown. */
+@utility prose {
+  color: var(--soft-foreground);
+  line-height: 1.7;
+  overflow-wrap: break-word;
+
+  & > :first-child {
+    margin-top: 0;
+  }
+  & > :last-child {
+    margin-bottom: 0;
+  }
+  & p,
+  & ul,
+  & ol,
+  & blockquote,
+  & pre,
+  & table,
+  & figure {
+    margin-block: 1.1em;
+  }
+  & h1,
+  & h2,
+  & h3,
+  & h4 {
+    color: var(--foreground);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin-block: 2em 0.6em;
+    text-wrap: balance;
+  }
+  & h1 {
+    font-size: 1.9em;
+  }
+  & h2 {
+    font-size: 1.5em;
+  }
+  & h3 {
+    font-size: 1.2em;
+  }
+  & h4 {
+    font-size: 1em;
+  }
+  & strong {
+    color: var(--foreground);
+    font-weight: 600;
+  }
+  & a {
+    @apply link;
+  }
+  & ul {
+    list-style: none;
+    padding-left: 1.25em;
+  }
+  & ul > li {
+    position: relative;
+  }
+  & ul > li::before {
+    content: "";
+    position: absolute;
+    left: -1.1em;
+    top: 0.68em;
+    width: 0.36em;
+    height: 0.33em;
+    background: var(--muted-foreground);
+    border-radius: 48% 52% 42% 58% / 56% 44% 56% 44%;
+  }
+  & ol {
+    list-style: decimal;
+    padding-left: 1.5em;
+  }
+  & ol > li::marker {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--muted-foreground);
+  }
+  & li {
+    margin-block: 0.4em;
+  }
+  & blockquote {
+    border-left: 2px solid var(--border);
+    padding-left: 1em;
+    color: var(--muted-foreground);
+  }
+  & hr {
+    border-color: var(--border);
+    margin-block: 2.5em;
+  }
+  & img {
+    max-height: 32rem;
+    border-radius: var(--radius-lg);
+  }
+  & :not(pre) > code {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    background: var(--muted);
+    border-radius: 0.3em;
+    padding: 0.15em 0.35em;
+    color: var(--foreground);
+  }
+  & pre {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    line-height: 1.6;
+    background: var(--card) !important;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1em 1.15em;
+    overflow-x: auto;
+  }
+  & table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-size: 0.925em;
+  }
+  & th,
+  & td {
+    border-bottom: 1px solid var(--border);
+    padding: 0.5em 0.9em 0.5em 0;
+    text-align: left;
+  }
+  & th {
+    color: var(--foreground);
+    font-weight: 600;
+  }
+}
+
+/* shiki dual themes: light values inline, dark values in --shiki-dark */
+.dark .shiki,
+.dark .shiki span {
+  color: var(--shiki-dark) !important;
 }

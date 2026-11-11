@@ -7,7 +7,9 @@ import {
   type InsertTechnologiesSchema,
   insertTechnologiesSchema,
 } from "@/lib/validators";
+import { CacheTag } from "@/queries/tags";
 import { authOptions } from "../auth-options";
+import { invalidate } from "./invalidate";
 
 export async function insertTechnology(formData: InsertTechnologiesSchema) {
   const session = await getServerSession(authOptions);
@@ -17,7 +19,7 @@ export async function insertTechnology(formData: InsertTechnologiesSchema) {
   const { id: _, ...data } =
     await insertTechnologiesSchema.parseAsync(formData);
 
-  return await db.transaction(async (tx) => {
+  const result = await db.transaction(async (tx) => {
     const exists = await tx.query.technologies.findFirst({
       where: eq(technologies.slug, data.slug),
     });
@@ -46,6 +48,9 @@ export async function insertTechnology(formData: InsertTechnologiesSchema) {
 
     return tech;
   });
+
+  invalidate(CacheTag.Technologies);
+  return result;
 }
 
 export type InsertTechnology = Awaited<ReturnType<typeof insertTechnology>>;

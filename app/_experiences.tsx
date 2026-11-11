@@ -1,94 +1,71 @@
-"use client";
-import { format } from "date-fns";
 import NextImage from "next/image";
-import NextLink from "next/link";
-import { MarkdownNoHeadings } from "@/components/ui/md";
-import {
-  Timeline,
-  TimelineConnector,
-  TimelineContent,
-  TimelineDot,
-  TimelineItem,
-  TimelineSeparator,
-} from "@/components/ui/timeline";
-import {
-  TypographyH2,
-  TypographyLead,
-  TypographyP,
-} from "@/components/ui/typography";
-import { cn } from "@/lib/utils";
+import { Markdown } from "@/components/markdown";
+import { formatMonth } from "@/lib/format";
 import type { GetPortfolioWithRelations } from "@/queries";
-import { StackItem } from "./_stack-item";
+import { Stack } from "./_stack";
 
 interface Props {
   experiences: GetPortfolioWithRelations["experiences"];
 }
 
-export function ExperienceList({ experiences = [] }: Props) {
+export function ExperienceList({ experiences }: Props) {
   return (
-    <div id="experience" className="flex flex-col gap-4 scroll-m-8">
-      <TypographyH2 className="border-none">Experience</TypographyH2>
-      <div className="flex flex-col gap-2">
-        <Timeline>
-          {experiences.map((exp, index) => (
-            <TimelineItem key={exp.id}>
-              <TimelineSeparator>
-                <TimelineDot />
-                <TimelineConnector />
-              </TimelineSeparator>
-              <TimelineContent>
-                <div
-                  className={cn(
-                    "-mt-1.5 mb-20 flex flex-col gap-2",
-                    index === experiences.length - 1 && "mb-0",
+    <ol className="mt-8 sm:mt-10">
+      {experiences.map((exp) => (
+        <li
+          key={exp.id}
+          className="grid gap-x-10 gap-y-3 border-t py-8 last:pb-0 sm:py-10 md:grid-cols-[13rem_minmax(0,1fr)]"
+        >
+          <p className="font-medium font-mono text-base text-soft md:pt-2">
+            {formatMonth(exp.startedAt)}
+            <span className="px-2 text-muted-foreground">→</span>
+            {exp.endedAt ? (
+              formatMonth(exp.endedAt)
+            ) : (
+              <span className="text-foreground">now</span>
+            )}
+          </p>
+          <div className="min-w-0">
+            <div className="flex items-center gap-4">
+              {exp.companyLogo && (
+                <NextImage
+                  src={exp.companyLogo}
+                  alt=""
+                  className="size-12 shrink-0 rounded-lg object-contain"
+                  height={48}
+                  width={48}
+                />
+              )}
+              <div className="min-w-0">
+                <h3 className="font-semibold text-2xl leading-tight tracking-[-0.03em] sm:text-[1.75rem]">
+                  {exp.jobTitle}
+                </h3>
+                <p className="mt-1 text-lg text-soft">
+                  {exp.companyWebsite ? (
+                    <a
+                      href={exp.companyWebsite}
+                      className="link"
+                      rel="noreferrer"
+                    >
+                      {exp.companyName}
+                    </a>
+                  ) : (
+                    exp.companyName
                   )}
-                >
-                  <TypographyP>
-                    {format(exp.startedAt, "MMMM yyyy")} —{" "}
-                    {exp.endedAt ? format(exp.endedAt, "MMMM yyyy") : "Present"}
-                  </TypographyP>
-                  <div className="flex gap-4">
-                    {exp.companyLogo && (
-                      <NextImage
-                        src={exp.companyLogo}
-                        alt="logo"
-                        className="object-contain"
-                        height={45}
-                        width={45}
-                      />
-                    )}
-                    <div className="flex flex-col gap-2">
-                      <div className="flex items-center flex-nowrap gap-1">
-                        <NextLink href={exp.companyWebsite || "#"}>
-                          <TypographyLead className="font-bold text-foreground leading-none">
-                            {exp.companyName}
-                          </TypographyLead>
-                        </NextLink>
-                      </div>
-                      <TypographyP className="text-foreground/90 leading-none whitespace-pre">
-                        {exp.jobTitle}
-                      </TypographyP>
-                    </div>
-                  </div>
-                  {exp.jobDescription && (
-                    <MarkdownNoHeadings content={exp.jobDescription} />
-                  )}
-                  {exp.stack.length > 0 && (
-                    <div className="mt-4 flex flex-wrap gap-2 items-center">
-                      {exp.stack.map((expTech) => (
-                        <StackItem
-                          key={`${expTech.experienceId}-${expTech.techId}`}
-                          tech={expTech.tech}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </TimelineContent>
-            </TimelineItem>
-          ))}
-        </Timeline>
-      </div>
-    </div>
+                </p>
+              </div>
+            </div>
+            {exp.jobDescription && (
+              <Markdown
+                content={exp.jobDescription}
+                headings={false}
+                className="mt-5 max-w-[66ch]"
+              />
+            )}
+            <Stack items={exp.stack.map((item) => item.tech)} />
+          </div>
+        </li>
+      ))}
+    </ol>
   );
 }

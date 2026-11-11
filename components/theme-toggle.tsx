@@ -1,36 +1,35 @@
 "use client";
 
-import { IconMoonFilled, IconSunFilled } from "@tabler/icons-react";
-import { useTheme } from "next-themes";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+/*
+ * The theme lives on <html class="dark"> and in localStorage. The inline
+ * script in the root layout applies it before first paint.
+ */
+export function ThemeToggle() {
+  const toggle = () => {
+    const dark = document.documentElement.classList.toggle("dark");
+    try {
+      localStorage.setItem("theme", dark ? "dark" : "light");
+    } catch {}
+  };
 
-interface Props {
-  size?: "sm" | "md";
-}
-export function ThemeToggle({ size = "md" }: Props) {
-  const { setTheme, theme } = useTheme();
-
-  const small = size === "sm";
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      className={cn(small ? "w-9 h-9" : "")}
+    <button
+      type="button"
+      onClick={toggle}
+      aria-label="Switch between dark and light theme"
+      className="grid size-9 place-items-center rounded-md text-muted-foreground transition-colors hover:text-foreground"
     >
-      <IconSunFilled
-        className={cn(
-          "rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0",
-          small && "w-6 h-6",
-        )}
-      />
-      <IconMoonFilled
-        className={cn(
-          "absolute rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100",
-          small && "w-6 h-6",
-        )}
-      />
-    </Button>
+      <svg viewBox="0 0 20 20" className="size-[18px]" aria-hidden="true">
+        <circle
+          cx="10"
+          cy="10"
+          r="7.25"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+        />
+        <path d="M10 2.75a7.25 7.25 0 0 1 0 14.5Z" fill="currentColor" />
+      </svg>
+    </button>
   );
 }

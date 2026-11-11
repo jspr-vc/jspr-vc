@@ -1,34 +1,55 @@
-import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
-import type { ReactNode } from "react";
+import type { Metadata } from "next";
+import NextLink from "next/link";
+import { type ReactNode, Suspense } from "react";
 import { AuthMenu } from "@/components/auth-menu";
-import { preloadGetPortfolio } from "@/queries";
-import { authOptions } from "@/server/auth-options";
+import { Wordmark } from "@/components/brand/logo";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { getCurrentUser } from "@/server/session";
 import DashboardTabs from "./_tabs";
+
+export const metadata: Metadata = { title: "Dashboard" };
 
 interface Props {
   children: ReactNode;
 }
 
-export default async function DashboardLayout({ children }: Props) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user) {
-    redirect("/sign-in");
-  }
-
-  preloadGetPortfolio(session.user.id);
-
+export default function DashboardLayout({ children }: Props) {
   return (
-    <div className="container p-4 md:p-8">
-      <div className="flex flex-col gap-4">
-        <div className="self-end">
-          <AuthMenu user={session.user} />
-        </div>
-        <main className="flex flex-col gap-6">
-          <DashboardTabs isAdmin={session.user.role === "admin"} />
+    <div className="min-h-dvh bg-ground pb-10">
+      <div className="mx-auto max-w-[64rem] px-3 sm:px-6">
+        <header>
+          <div className="flex h-20 items-center justify-between gap-4 px-2">
+            <NextLink
+              href="/"
+              aria-label="jspr.vc, home"
+              className="shrink-0 rounded-sm"
+            >
+              <Wordmark className="text-[2rem]" />
+            </NextLink>
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <Suspense
+                fallback={<div className="size-8 rounded-full bg-muted" />}
+              >
+                <CurrentUserMenu />
+              </Suspense>
+            </div>
+          </div>
+          <div className="px-2 sm:px-3">
+            <Suspense fallback={<div className="h-[46px]" />}>
+              <DashboardTabs />
+            </Suspense>
+          </div>
+        </header>
+        <main className="mt-3 rounded-tile bg-background p-6 sm:p-9">
           {children}
         </main>
       </div>
     </div>
   );
+}
+
+async function CurrentUserMenu() {
+  const user = await getCurrentUser();
+  return <AuthMenu user={user} />;
 }

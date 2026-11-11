@@ -1,61 +1,81 @@
 import NextImage from "next/image";
-import { MarkdownNoHeadings } from "@/components/ui/md";
-import {
-  TypographyH2,
-  TypographyH4,
-  TypographyP,
-} from "@/components/ui/typography";
+import { Markdown } from "@/components/markdown";
+import { cn } from "@/lib/utils";
 import type { GetPortfolioWithRelations } from "@/queries";
-import { StackItem } from "./_stack-item";
+import { Stack } from "./_stack";
+import { Tile } from "./_tile";
 
 interface Props {
   projects: GetPortfolioWithRelations["projects"];
 }
-export function ProjectList({ projects = [] }: Props) {
+
+/*
+ * One tile per project. An odd one out at the end takes the full row.
+ */
+export function ProjectTiles({ projects }: Props) {
   return (
-    <div id="projects" className="flex flex-col gap-4 scroll-m-8">
-      <TypographyH2 className="border-none">Projects</TypographyH2>
-      <div className="flex flex-col gap-16">
-        {projects.map((project) => (
-          <div key={project.id} className="flex flex-col lg:flex-row gap-2">
-            <div className="shrink-0 relative h-32 w-60 lg:h-16 lg:w-32 aspect-video rounded-lg overflow-hidden bg-card/30 shadow-sm">
-              <NextImage
-                width={1280}
-                height={720}
-                className="object-contain h-32 w-60 lg:h-16 lg:w-32 aspect-video "
-                src={project.thumbnail || ""}
-                alt={project.name}
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <TypographyH4 className="border-none">
-                {project.name}
-              </TypographyH4>
+    <>
+      {projects.map((project, index) => {
+        const alone =
+          projects.length % 2 === 1 && index === projects.length - 1;
+        return (
+          <Tile
+            key={project.id}
+            aria-label={project.name}
+            className={cn(
+              "flex flex-col lg:col-span-3",
+              alone &&
+                "lg:col-span-6 lg:grid lg:grid-cols-2 lg:items-center lg:gap-12",
+            )}
+          >
+            {project.thumbnail && (
+              <div
+                className={cn(
+                  "mb-8 aspect-video overflow-hidden rounded-xl bg-muted",
+                  alone && "lg:mb-0",
+                )}
+              >
+                <NextImage
+                  width={960}
+                  height={540}
+                  sizes="(min-width: 1024px) 560px, 92vw"
+                  className="size-full object-contain"
+                  src={project.thumbnail}
+                  alt=""
+                />
+              </div>
+            )}
+            <div className="flex min-w-0 flex-1 flex-col">
+              <p className="font-mono text-muted-foreground text-sm">
+                {project.date.getFullYear()}
+              </p>
+              <h3 className="mt-2 font-mono font-semibold text-2xl tracking-mono-display sm:text-[1.75rem]">
+                {project.link ? (
+                  <a
+                    href={project.link}
+                    rel="noreferrer"
+                    className="underline decoration-transparent underline-offset-4 transition-colors hover:decoration-dot"
+                  >
+                    {project.name}
+                  </a>
+                ) : (
+                  project.name
+                )}
+              </h3>
               {project.shortDescription && (
-                <MarkdownNoHeadings
-                  components={{
-                    p: ({ node, ...props }) => (
-                      <TypographyP className="mb-4" {...props} />
-                    ),
-                  }}
+                <Markdown
                   content={project.shortDescription}
+                  headings={false}
+                  className="mt-3 max-w-[52ch]"
                 />
               )}
-
-              {project.stack.length > 0 && (
-                <div className="flex flex-wrap gap-2 items-center">
-                  {project.stack.map((projectTech) => (
-                    <StackItem
-                      key={`${projectTech.projectId}-${projectTech.techId}`}
-                      tech={projectTech.tech}
-                    />
-                  ))}
-                </div>
-              )}
+              <div className="mt-auto pt-4">
+                <Stack items={project.stack.map((item) => item.tech)} />
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-    </div>
+          </Tile>
+        );
+      })}
+    </>
   );
 }

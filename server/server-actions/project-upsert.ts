@@ -1,6 +1,5 @@
 "use server";
 import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import { db } from "@/db/client";
 import { projects } from "@/db/schema";
@@ -9,8 +8,9 @@ import {
   type InsertProjectSchema,
   insertProjectSchema,
 } from "@/lib/validators";
+import { CacheTag } from "@/queries/tags";
 import { authOptions } from "../auth-options";
-import { revalidateHomeIfDefault } from "./revalidate-home";
+import { invalidate } from "./invalidate";
 
 export async function upsertProject(formData: InsertProjectSchema) {
   const session = await getServerSession(authOptions);
@@ -77,8 +77,9 @@ export async function upsertProject(formData: InsertProjectSchema) {
     });
   });
 
-  revalidatePath("/dashboard/projects");
-  revalidatePath(`/${session.user.portfolioSlug}`);
-  await revalidateHomeIfDefault(session.user.portfolioId);
+  invalidate(
+    CacheTag.Portfolio(session.user.portfolioId),
+    ...(result ? [CacheTag.Project(result.id)] : []),
+  );
   return result;
 }

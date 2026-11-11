@@ -1,46 +1,35 @@
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
-import { GithubIcon } from "../portfolio/_github_icon";
-import { LinkIcon } from "../portfolio/_link_icon";
-import { LinkedinIcon } from "../portfolio/_linkedin_icon";
-import { TwitterIcon } from "../portfolio/_twitter_icon";
+import { handles, og, ogFonts, plainText } from "../_shared";
 
-export const runtime = "edge";
-
-const interBold = fetch(
-  new URL("../../../assets/Inter-Bold.ttf", import.meta.url),
-).then((res) => res.arrayBuffer());
-
+// LinkedIn covers the left of the banner with the profile photo, so the
+// content is set against the right edge.
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.nextUrl);
 
   const name = searchParams.get("name") ?? "";
   const url = searchParams.get("url") ?? "";
   const headline = searchParams.get("headline") ?? "";
-  const github = searchParams.get("github") ?? "";
-  const linkedin = searchParams.get("linkedin") ?? "";
-  const twitter = searchParams.get("twitter") ?? "";
-  const website = searchParams.get("website") ?? "";
-
-  const handle = (value: string) =>
-    value.replace(new RegExp(/https?:\/\//), "").replace(/\/$/g, "");
+  const links = handles([
+    searchParams.get("github") ?? "",
+    searchParams.get("linkedin") ?? "",
+    searchParams.get("twitter") ?? "",
+    searchParams.get("website") ?? "",
+  ]);
 
   return new ImageResponse(
     <div
       style={{
-        position: "relative",
         width: "100%",
         height: "100%",
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-end",
         justifyContent: "center",
-        padding: "0 5rem",
-        color: "white",
-        backgroundColor: "#000",
-        backgroundImage:
-          "radial-gradient(circle at 25px 25px, #333 2%, transparent 0%), radial-gradient(circle at 100% 80%, rgba(255,255,255,0.1) 0%, transparent 100%)",
-        backgroundSize: "50px 50px, 100% 100%",
+        padding: "0 80px",
+        color: og.bone,
+        backgroundColor: og.ink,
+        fontFamily: "Geist",
       }}
     >
       <div
@@ -53,20 +42,20 @@ export async function GET(req: NextRequest) {
       >
         <div
           style={{
+            fontFamily: "Geist Mono",
             fontSize: 22,
-            fontFamily: "Inter",
-            color: "rgba(255,255,255,0.5)",
-            marginBottom: 4,
+            color: og.ash,
+            marginBottom: 10,
           }}
         >
           {url}
         </div>
         <div
           style={{
-            fontWeight: 800,
+            fontWeight: 600,
             fontSize: 76,
-            lineHeight: 1.1,
-            fontFamily: "Inter",
+            letterSpacing: "-0.045em",
+            lineHeight: 1.05,
             textAlign: "right",
           }}
         >
@@ -74,77 +63,32 @@ export async function GET(req: NextRequest) {
         </div>
         <div
           style={{
-            fontSize: 28,
-            fontWeight: 300,
-            color: "rgba(255,255,255,0.75)",
+            fontFamily: "Geist Mono",
+            fontSize: 26,
+            color: og.fog,
             textAlign: "right",
-            marginTop: 8,
+            marginTop: 14,
           }}
         >
-          {headline
-            .replaceAll("**", "")
-            .replaceAll("__", "")
-            .replaceAll("~~", "")
-            .replaceAll(/\[(.*)\]\(.*\)/g, "$1")}
+          {plainText(headline)}
         </div>
         <div
           style={{
             display: "flex",
-            alignItems: "center",
             justifyContent: "flex-end",
-            gap: "2rem",
-            marginTop: 28,
+            gap: 32,
+            marginTop: 30,
+            fontFamily: "Geist Mono",
+            fontSize: 20,
+            color: og.ash,
           }}
         >
-          {github && (
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <GithubIcon />
-              <div style={{ fontSize: 20, color: "rgba(255,255,255,0.5)" }}>
-                {github.replace(new RegExp(/.*\.com\//), "").replace(/\/$/, "")}
-              </div>
-            </div>
-          )}
-          {linkedin && (
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <LinkedinIcon />
-              <div style={{ fontSize: 20, color: "rgba(255,255,255,0.5)" }}>
-                {linkedin
-                  .replace(new RegExp(/.*\.com\//), "")
-                  .replace(/\/$/g, "")}
-              </div>
-            </div>
-          )}
-          {twitter && (
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <TwitterIcon />
-              <div style={{ fontSize: 20, color: "rgba(255,255,255,0.5)" }}>
-                {twitter
-                  .replace(new RegExp(/.*\.com\//), "")
-                  .replace(/\/$/g, "")}
-              </div>
-            </div>
-          )}
-          {website && (
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <LinkIcon />
-              <div style={{ fontSize: 20, color: "rgba(255,255,255,0.5)" }}>
-                {handle(website)}
-              </div>
-            </div>
-          )}
+          {links.map((link) => (
+            <span key={link}>{link}</span>
+          ))}
         </div>
       </div>
     </div>,
-    {
-      width: 1584,
-      height: 396,
-      fonts: [
-        {
-          name: "Inter",
-          weight: 800,
-          data: await interBold,
-        },
-      ],
-    },
+    { width: 1584, height: 396, fonts: await ogFonts() },
   );
 }
