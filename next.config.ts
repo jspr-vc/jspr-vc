@@ -18,10 +18,6 @@ const nextConfig: NextConfig = {
         hostname: "*.public.blob.vercel-storage.com",
         pathname: "/**",
       },
-      // Images uploaded before the move to Vercel Blob.
-      { protocol: "https", hostname: "uploadthing.com", pathname: "/**" },
-      { protocol: "https", hostname: "utfs.io", pathname: "/**" },
-      { protocol: "https", hostname: "*.ufs.sh", pathname: "/**" },
     ],
   },
 };
